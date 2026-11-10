@@ -19,7 +19,7 @@ const SUBJECTS = [
     full: 'Calculus II — Integration',
     code: 'MTH 112',
     c: '#22d3ee', c2: '#818cf8',
-    exam: '2026-11-12',
+    exam: '2026-11-10', examTime: '10:30',
     playlistUrl: 'https://www.youtube.com/playlist?list=PLhS6ICSV4wuWys61gxA-4r00UJF48QUAm',
     hasVideos: true,
     topics: [
@@ -103,7 +103,7 @@ const SUBJECTS = [
     full: 'Database Systems',
     code: 'CSCI 305',
     c: '#a855f7', c2: '#f472b6',
-    exam: '2026-11-18',
+    exam: '2026-11-18', examTime: '12:00',
     hasVideos: false,
     topics: [
       {
@@ -189,7 +189,7 @@ const SUBJECTS = [
     full: 'Data Structures & Algorithms',
     code: 'CSC 204',
     c: '#34d399', c2: '#10b981',
-    exam: '2026-11-19',
+    exam: '2026-11-19', examTime: '09:00',
     hasVideos: false,
     topics: [
       {
@@ -266,7 +266,7 @@ const SUBJECTS = [
     full: 'Introduction to Probability & Statistics',
     code: 'MATH 202',
     c: '#fbbf24', c2: '#fb923c',
-    exam: '2026-11-15',
+    exam: '2026-11-15', examTime: '10:30',
     hasVideos: false,
     topics: [
       {
@@ -343,7 +343,7 @@ const SUBJECTS = [
     full: 'Electric & Electronic Circuits',
     code: 'ECEN 111',
     c: '#38bdf8', c2: '#818cf8',
-    exam: '2026-11-17',
+    exam: '2026-11-17', examTime: '10:30',
     hasVideos: false,
     topics: [
       {
@@ -460,7 +460,8 @@ const defaultState = () => ({
   days: {},     // ISO -> { plan:[...] }
   topics: {},   // topicId -> { status, steps:{}, videos:[], notes:'' }
   stats: {},    // ISO -> { focusMin, sessions, tasksDone }
-  exams: {}     // subjectId -> ISO
+  exams: {},     // subjectId -> ISO
+  examTimes: {}  // subjectId -> HH:MM
 });
 let S = defaultState();
 let currentDay = todayISO();
@@ -489,6 +490,56 @@ const topicById = id => allTopics().find(t => t.id === id);
 const subjectOfTopic = id => SUBJECTS.find(s => s.topics.some(t => t.id === id));
 
 const examOf = subId => (S.exams && S.exams[subId]) || (subjectById(subId) ? subjectById(subId).exam : null);
+const examTimeOf = subId => (S.exams && S.examTimes && S.examTimes[subId]) || (subjectById(subId) ? subjectById(subId).examTime : null) || '10:30';
+const examDateTime = subId => {
+  const d = examOf(subId);
+  if (!d) return null;
+  const t = examTimeOf(subId) || '10:30';
+  const dt = new Date(d + 'T' + (t.length === 5 ? t : '10:30') + ':00');
+  return isNaN(dt.getTime()) ? null : dt;
+};
+const EXAM_DATE_FIX = { calc2: ['2026-11-12', '2026-11-10'] };
+const fmtLeft = ms => {
+  if (ms == null) return '-';
+  if (ms <= 0) return '\u0627\u0645\u062A\u062D\u0646';
+  const tm = Math.floor(ms / 60000);
+  const d = Math.floor(tm / 1440), h = Math.floor((tm % 1440) / 60), m = tm % 60;
+  const p = [];
+  if (d) p.push(d + '\u064A');
+  if (d || h) p.push(h + '\u0633');
+  p.push(m + '\u062F');
+  return p.join(' ');
+};
+const fmtLeftShort = ms => {
+  if (ms == null) return '-';
+  if (ms <= 0) return '\u0627\u0645\u062A\u062D\u0646';
+  const tm = Math.floor(ms / 60000);
+  const d = Math.floor(tm / 1440), h = Math.floor((tm % 1440) / 60);
+  if (d) return d + '\u064A ' + h + '\u0633';
+  if (h) return h + '\u0633';
+  return (tm % 60) + '\u062F';
+};
+const nextExam = () => {
+  const now = Date.now();
+  let best = null;
+  SUBJECTS.forEach(s => {
+    const dt = examDateTime(s.id);
+    if (!dt) return;
+    const diff = dt.getTime() - now;
+    if (diff > 0 && (!best || diff < best.diff)) best = { s, dt, diff };
+  });
+  return best;
+};
+function syncExamDefaults() {
+  S.exams = S.exams || {};
+  S.examTimes = S.examTimes || {};
+  SUBJECTS.forEach(sub => {
+    const fix = EXAM_DATE_FIX[sub.id];
+    if (fix && S.exams[sub.id] === fix[0]) S.exams[sub.id] = fix[1];
+    if (!S.exams[sub.id]) S.exams[sub.id] = sub.exam;
+    if (!S.examTimes[sub.id]) S.examTimes[sub.id] = sub.examTime || '10:30';
+  });
+}
 const daysLeft = iso => {
   if (!iso) return null;
   return Math.ceil((new Date(iso + 'T00:00:00') - new Date(todayISO() + 'T00:00:00')) / 864e5);
@@ -524,10 +575,11 @@ function load() {
       S.topics = p.topics || {};
       S.stats = p.stats || {};
       S.exams = p.exams || {};
+      S.examTimes = p.examTimes || {};
     }
   } catch (e) { console.warn('load failed', e); }
+  syncExamDefaults();
   SUBJECTS.forEach(sub => {
-    if (!S.exams[sub.id]) S.exams[sub.id] = sub.exam;
     sub.topics.forEach(t => {
       if (!S.topics[t.id]) S.topics[t.id] = { status: 'new', steps: {}, videos: [], notes: '' };
       t.steps.forEach(s => { if (S.topics[t.id].steps[s] === undefined) S.topics[t.id].steps[s] = false; });
@@ -574,6 +626,8 @@ function renderSubTabs() {
   SUBJECTS.forEach(sub => {
     const p = subProgress(sub);
     const dl = daysLeft(examOf(sub.id));
+    const _dt = examDateTime(sub.id);
+    const _passed = !!(_dt && _dt.getTime() <= Date.now());
     const b = document.createElement('button');
     b.className = 'subtab' + (sub.id === activeSubject ? ' on' : '');
     b.style.setProperty('--c', sub.c);
@@ -581,7 +635,7 @@ function renderSubTabs() {
     b.innerHTML =
       '<span class="st-dot"></span>' + esc(sub.name) +
       '<small>' + p.pct + '%</small>' +
-      (dl !== null && dl >= 0 ? '<span class="st-badge">' + dl + 'ي</span>' : '<span class="st-badge">✓</span>');
+      (_passed ? '<span class="st-badge">&#10003;</span>' : (dl !== null && dl >= 0 ? '<span class="st-badge">' + (dl === 0 ? '\u0627\u0644\u064A\u0648\u0645' : dl + '\u064A') + '</span>' : '<span class="st-badge">\u2014</span>'));
     b.onclick = () => { activeSubject = sub.id; renderAll(); };
     box.appendChild(b);
   });
@@ -612,30 +666,43 @@ function renderTop() {
   $('#quote').textContent = QUOTES[Math.floor(Math.random() * QUOTES.length)];
 
   /* أقرب ميدتيرم */
-  const upcoming = SUBJECTS.map(s => ({ s, d: daysLeft(examOf(s.id)) }))
-    .filter(x => x.d !== null && x.d >= 0).sort((a, b) => a.d - b.d)[0];
-  if (upcoming) {
-    $('#statMid').textContent = upcoming.d + ' يوم';
-    $('#statMidSub').textContent = upcoming.s.name;
+    renderMidCountdown();
+}
+
+function renderMidCountdown() {
+  const chip = $('#statMid'), sub = $('#statMidSub');
+  const box = $('#nextExamBox');
+  const nx = nextExam();
+  if (nx) {
+    if (chip) { chip.textContent = fmtLeftShort(nx.diff); sub.textContent = nx.s.name; }
+    const cl = $('#chipMid');
+    if (cl) cl.title = nx.s.name + ' (' + nx.s.code + ') - ' + fmtLeft(nx.diff);
+    if (box) {
+      box.hidden = false;
+      $('#nextExamName').textContent = nx.s.name + ' · ' + nx.s.code;
+      $('#nextExamLeft').textContent = fmtLeft(nx.diff);
+      $('#nextExamWhen').textContent = arDate(examOf(nx.s.id)) + ' · ' + examTimeOf(nx.s.id);
+      $('#nextExamClock').textContent = '\u0623\u0642\u0631\u0628 \u0645\u064A\u062F\u062A\u064A\u0631\u0645';
+    }
   } else {
-    $('#statMid').textContent = '—';
-    $('#statMidSub').textContent = 'للميدتيرم';
+    if (chip) { chip.textContent = '-'; sub.textContent = 'ميدتيرم'; }
+    if (box) box.hidden = true;
   }
 }
 function renderExams() {
   const box = $('#examList');
   box.innerHTML = '';
-  const rows = SUBJECTS.map(s => ({ s, d: daysLeft(examOf(s.id)) }))
+  const rows = SUBJECTS.map(s => ({ s, d: daysLeft(examOf(s.id)), dt: examDateTime(s.id) }))
     .sort((a, b) => (a.d === null ? 999 : a.d) - (b.d === null ? 999 : b.d));
-  rows.forEach(({ s, d }) => {
+  rows.forEach(({ s, d, dt }) => {
     const el = document.createElement('div');
     el.className = 'exam-row';
     el.style.setProperty('--c', s.c);
     el.innerHTML =
       '<span class="ex-ico">' + (s.hasVideos ? '📐' : '📚') + '</span>' +
       '<div class="ex-main"><span class="ex-name">' + esc(s.name) + '</span>' +
-      '<span class="ex-date">' + esc(arDate(examOf(s.id))) + '</span></div>' +
-      '<div class="ex-left">' + (d === null ? '—' : (d >= 0 ? d + ' يوم' : 'عدّى')) +
+      '<span class="ex-date">' + esc(arDate(examOf(s.id))) + ' · ' + esc(examTimeOf(s.id)) + '</span></div>' +
+      '<div class="ex-left">' + (dt ? (dt.getTime() <= Date.now() ? 'امتحن' : fmtLeft(dt.getTime() - Date.now())) : (d === null ? '-' : d + ' يوم')) +
       '<small>' + esc(s.code) + '</small></div>';
     el.onclick = () => { activeSubject = s.id; renderAll(); };
     el.style.cursor = 'pointer';
@@ -856,8 +923,10 @@ function sprintPlan(capMin) {
     const coreMin = core.reduce((a, id) => a + topicMinutes(id).total, 0);
     const optMin = opt.reduce((a, id) => a + topicMinutes(id).total, 0);
     const ex = examOf(sub.id);
+    const dt = examDateTime(sub.id);
+    const past = !!(dt && dt.getTime() <= Date.now());
     const usable = days.filter(dd => !ex || dd <= ex).length;   /* أيام متاحة قبل الامتحان */
-    perSubject[sub.id] = { core, opt, coreMin, optMin, usable, exam: ex, left: daysLeft(ex) };
+    perSubject[sub.id] = { core, opt, coreMin, optMin, usable, exam: ex, left: daysLeft(ex), dt, past };
   });
 
   /* ترتيب المواد: الأقرب امتحاناً أولاً */
@@ -869,6 +938,7 @@ function sprintPlan(capMin) {
 
   const assign = {};   /* day -> { subId -> [topicIds] } */
   days.forEach(dd => assign[dd] = {});
+  const passed = [];
   const remaining = {};
   subs.forEach(s => remaining[s.id] = perSubject[s.id].core.slice());
 
@@ -879,6 +949,7 @@ function sprintPlan(capMin) {
     const ps = perSubject[sub.id];
     const list = remaining[sub.id];
     if (!list.length) return;
+    if (ps.past) { passed.push(...list); remaining[sub.id] = []; return; }
     const subDays = days.filter(dd => !ps.exam || dd <= ps.exam);
     if (!subDays.length) { dropped.push(...list); return; }
     const T = list.length, D = subDays.length;
@@ -940,6 +1011,7 @@ function sprintPlan(capMin) {
   const leftovers = {};
   subs.forEach(sub => {
     const ps = perSubject[sub.id];
+    if (ps.past) { passed.push(...ps.opt.filter(id => topicProgress(id) < 1)); return; }
     const optList = ps.opt.slice();
     /* رتّب الأيام: الأقرب لامتحان المادة أولاً */
     const subDays = days.filter(dd => !ps.exam || dd <= ps.exam);
@@ -973,7 +1045,7 @@ function sprintPlan(capMin) {
   });
   /* التوبيكس اللي اتشالت (التجاوز للسقف) */
   if (dropped.length) leftovers.__dropped = dropped;
-  return { days, perSubject, assign, leftovers, subs, dropped };
+  return { days, perSubject, assign, leftovers, subs, dropped, passed };
 }
 function sprintDayPlan(topicIds, startAt, isLast, optionalIds, sub) {
   const plan = [];
@@ -1056,10 +1128,10 @@ function openSprintModal() {
   const perSubRows = () => sp.subs.map(sub => {
     const ps = sp.perSubject[sub.id];
     const done = subProgress(sub).pct;
-    const leftTxt = ps.left === null ? '—' : (ps.left >= 0 ? 'باقي ' + ps.left + ' يوم' : 'الامتحان عدّى');
+    const leftTxt = ps.past ? 'امتحن ✅' : (ps.dt ? 'باقي ' + fmtLeft(ps.dt.getTime() - Date.now()) : (ps.left === null ? '-' : 'باقي ' + ps.left + ' يوم'));
     return `<div class="sprint-subject" style="--c:${sub.c}">
       <div class="ss-head"><b>${esc(sub.name)}</b><span class="badge ghost">${esc(sub.code)}</span>
-        <span class="ss-meta">${esc(arDate(ps.exam))} · ${esc(leftTxt)}</span>
+        <span class="ss-meta">${esc(arDate(ps.exam))} · ${esc(examTimeOf(sub.id))} · ${esc(leftTxt)}</span>
         <span class="badge ghost" style="margin-inline-start:auto">${done}% خلص</span></div>
       <div class="hint" style="margin-top:2px">⏳ متبقي ≈ <b>${(ps.coreMin / 60).toFixed(1)} س</b> أساسية${ps.optMin ? ' + ' + (ps.optMin / 60).toFixed(1) + ' س بونص' : ''}</div>
     </div>`;
@@ -1082,7 +1154,8 @@ function openSprintModal() {
         hours: (ids.reduce((a, id) => a + topicMinutes(id).total, 0) / 60).toFixed(1),
         from: hmText(startAt), to: hmText(endT) + (endT >= 1440 ? ' (+1)' : ''),
         late: endT > 21 * 60,
-        blocks: plan.filter(p => !p.isBreak).length
+        blocks: plan.filter(p => !p.isBreak).length,
+        empty: !groups.length
       };
     });
   };
@@ -1090,7 +1163,7 @@ function openSprintModal() {
 
   const render = () => {
     openModal('🔥 خطة الميدتيرم — كل المواد', `
-      <div class="hint">الخطة بتوزّع الساعات على <b>${sp.days.length}</b> يوم، والأقرب امتحاناً ليه الأولوية.
+      <div class="hint">الخطة بتوزّع الساعات على <b>${rows.filter(r => !r.empty).length}</b> يوم، والأقرب امتحاناً ليه الأولوية.
         كل مادة ليها توبيكس أساسية (لازم تتغطي) واختيارية (بونص لو الوقت سمح).</div>
       <div class="sprint-subject" style="--c:#22d3ee">
         <div class="ss-head"><b>ملخص المواد</b></div>
@@ -1106,9 +1179,8 @@ function openSprintModal() {
         <label><input type="checkbox" id="spWeekend"${SPRINT_SKIP_WEEKEND ? ' checked' : ''}> 🚫 استثني الجمعة والسبت (أيام راحة)</label>
       </div>
       ${rows.some(r => r.late) ? `<div class="hint warn">⚠️ في يوم هيخلص متأخر (${rows.filter(r => r.late).map(r => r.to).join(' و ')}) — وقتك في المذاكرة بياخد أكتر من المدة بـ<b>الاستراحات</b> كمان. لو مش هتستحمل: ابدأ بدري أو فعّل وضع الكrush.</div>` : ''}
-      ${(sp.dropped && sp.dropped.length) ? `<div class="hint warn">🚫 <b>مش هيتغطى في الخطة</b> (السقف ${capH} س/يوم أقل من المطلوب): ${sp.dropped.map(id => esc(subjectOfTopic(id).name + ' · ' + topicById(id).title)).join(' — ')}</div>` : ''}
-      <div class="sprint-days">
-        ${rows.map((r, i) => `
+      ${(sp.passed && sp.passed.length) ? `<div class="hint">✅ <b>امتحن وخلص</b> — الامتحان عدّى فالتوبيكس دي ما اتغطّتش في الخطة: ${sp.passed.map(id => esc(subjectOfTopic(id).name + ' · ' + topicById(id).title)).join(' — ')}</div>` : ''}      <div class="sprint-days">
+        ${rows.filter(r => !r.empty).map((r, i) => `
           <div class="sprint-day">
             <div class="sd-head"><b>${i + 1}. ${r.day} ${r.date}</b><span class="badge">${r.hours} س</span></div>
             <div class="sd-time">🕘 ${r.from} → ${r.to} · ${r.blocks} جلسة</div>
@@ -1418,7 +1490,10 @@ function openSettingsModal() {
   const s = S.settings;
   const examRows = SUBJECTS.map(sub => `
     <div class="field"><label>${esc(sub.name)} (${esc(sub.code)})</label>
-      <input type="date" data-exam="${sub.id}" value="${examOf(sub.id) || ''}"></div>`).join('');
+      <div class="ex-edit-row">
+        <input type="date" data-exam="${sub.id}" value="${examOf(sub.id) || ''}">
+        <input type="time" data-examtime="${sub.id}" value="${examTimeOf(sub.id)}">
+      </div></div>`).join('');
   openModal('⚙ الإعدادات', `
     <div class="field-row">
       <div class="field"><label>جلسة التركيز (دقيقة)</label><input type="number" id="stFocus" min="5" max="120" value="${s.focus}"></div>
@@ -1456,6 +1531,7 @@ function openSettingsModal() {
     S.settings.dayEnd = $('#stEnd').value || '23:00';
     S.settings.autoContinue = $('#stAuto').value === '1';
     $$('#modalBody input[data-exam]').forEach(i => { if (i.value) S.exams[i.dataset.exam] = i.value; });
+    $$('#modalBody input[data-examtime]').forEach(i => { if (i.value) { S.examTimes = S.examTimes || {}; S.examTimes[i.dataset.examtime] = i.value; } });
     if (timer.mode === 'focus' && !timer.running) timer.remaining = S.settings.focus * 60;
     save(); renderAll(); closeModal(); toast('تم حفظ الإعدادات');
   };
@@ -1474,9 +1550,9 @@ function openSettingsModal() {
       try {
         S = Object.assign(defaultState(), JSON.parse(r.result));
         S.settings = Object.assign(defaultState().settings, S.settings || {});
-        S.days = S.days || {}; S.topics = S.topics || {}; S.stats = S.stats || {}; S.exams = S.exams || {};
+        S.days = S.days || {}; S.topics = S.topics || {}; S.stats = S.stats || {}; S.exams = S.exams || {}; S.examTimes = S.examTimes || {};
+        syncExamDefaults();
         SUBJECTS.forEach(sub => {
-          if (!S.exams[sub.id]) S.exams[sub.id] = sub.exam;
           sub.topics.forEach(t => {
             if (!S.topics[t.id]) S.topics[t.id] = { status: 'new', steps: {}, videos: [], notes: '' };
             t.steps.forEach(x => { if (S.topics[t.id].steps[x] === undefined) S.topics[t.id].steps[x] = false; });
@@ -1491,6 +1567,7 @@ function openSettingsModal() {
     if (!confirm('متأكد؟ هيمسح كل التقدّم والخطة.')) return;
     localStorage.removeItem(STORE_KEY);
     S = defaultState();
+    syncExamDefaults();
     SUBJECTS.forEach(sub => {
       S.exams[sub.id] = sub.exam;
       sub.topics.forEach(t => {
@@ -1729,6 +1806,7 @@ function init() {
     document.body.insertBefore(bar, document.body.firstChild);
   }
 
+  setInterval(renderMidCountdown, 30000);
   $('#dayPicker').value = currentDay;
   $('#dayPicker').onchange = e => setDay(e.target.value);
   $('#prevDay').onclick = () => { const d = new Date(currentDay + 'T00:00:00'); d.setDate(d.getDate() - 1); setDay(isoLocal(d)); };
