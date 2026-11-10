@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Midterm Planner · خطة الميدتيرم لكل المواد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@500;700&display=swap"></noscript>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="aurora"></div>
+<div class="grid-bg"></div>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">∑</div>
+    <div class="brand-txt">
+      <h1>MIDTERM&nbsp;PLANNER</h1>
+      <span>خطة ميدتيرم لكل المواد</span>
+    </div>
+  </div>
+
+  <div class="daynav">
+    <button class="ghost-btn" id="prevDay" title="اليوم السابق">›</button>
+    <div class="daybox">
+      <input type="date" id="dayPicker">
+      <button class="tiny-btn" id="todayBtn">النهارده</button>
+    </div>
+    <button class="ghost-btn" id="nextDay" title="اليوم التالي">‹</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="chip" id="chipFocus" title="ساعات التركيز النهارده">
+      <span class="chip-ico">◷</span>
+      <div><b id="statFocus">0</b><small id="statFocusGoal">/ 240 د</small></div>
+    </div>
+    <div class="chip" id="chipStreak" title="أيام متتالية">
+      <span class="chip-ico flame">🔥</span>
+      <div><b id="statStreak">0</b><small>يوم متتالي</small></div>
+    </div>
+    <div class="chip" id="chipTopics" title="التوبيكس اللي خلصتها">
+      <span class="chip-ico">✓</span>
+      <div><b id="statTopics">0/0</b><small>توبيكس</small></div>
+    </div>
+    <div class="chip" id="chipMid" title="أقرب ميدتيرم">
+      <span class="chip-ico">⌛</span>
+      <div><b id="statMid">—</b><small id="statMidSub">للميدتيرم</small></div>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="primary-btn" id="focusBtn" title="Focus Mode (F)">🎯 Focus Mode</button>
+    <button class="icon-btn" id="playlistBtn" title="البلاي ليست">▶</button>
+    <button class="icon-btn" id="settingsBtn" title="الإعدادات">⚙</button>
+  </div>
+</header>
+
+<!-- ===================== SUBJECT TABS ===================== -->
+<nav class="subtabs" id="subTabs"></nav>
+
+<!-- ===================== FILE:// WARNING ===================== -->
+<div class="file-warn" id="fileWarn" hidden>
+  ⚠️ فتحت الموقع بـ <b>file://</b> — الفيديوهات مش هتشتغل. شغّل <b>افتح-الموقع.bat</b> بدل كده.
+</div>
+
+<main class="wrap">
+
+  <!-- ===================== RIGHT COLUMN : TIMER ===================== -->
+  <section class="col-side">
+    <div class="card timer-card">
+      <div class="card-head">
+        <h2>⏱ تايمر بومودورو</h2>
+        <span class="badge" id="cycleBadge">جلسة 0</span>
+      </div>
+
+      <div class="ring-wrap">
+        <svg class="ring" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#22d3ee"/>
+              <stop offset="55%" stop-color="#a855f7"/>
+              <stop offset="100%" stop-color="#f472b6"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="100" cy="100" r="88"/>
+          <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="88"/>
+        </svg>
+        <div class="ring-center">
+          <div class="mode-label" id="modeLabel">تركيز</div>
+          <div class="time" id="timeLeft">25:00</div>
+          <div class="task-label" id="taskLabel">مفيش مهمة شغالة</div>
+        </div>
+      </div>
+
+      <div class="timer-actions">
+        <button class="round-btn primary" id="startBtn" title="تشغيل / إيقاف (Space)">▶</button>
+        <button class="round-btn" id="resetBtn" title="إعادة (R)">⟲</button>
+        <button class="round-btn" id="skipBtn" title="تخطي (Session)">⏭</button>
+      </div>
+
+      <div class="pomo-meta">
+        <div class="dots" id="pomoDots"></div>
+        <div class="mini-row">
+          <span>ساعات التركيز النهارده</span>
+          <b><span id="todayMin">0</span> / <span id="goalMin">240</span> د</b>
+        </div>
+        <div class="progress"><i id="dayProgress"></i></div>
+      </div>
+
+      <div class="quick-set">
+        <button data-min="15">15</button>
+        <button data-min="25" class="on">25</button>
+        <button data-min="45">45</button>
+        <button data-min="60">60</button>
+        <span class="quick-lbl">دقيقة تركيز</span>
+      </div>
+    </div>
+
+    <!-- NEXT EXAMS -->
+    <div class="card exam-card">
+      <div class="card-head"><h2>⏳ الميدتيرمات</h2></div>
+      <div class="exam-list" id="examList"></div>
+    </div>
+
+    <!-- TODAY STATS -->
+    <div class="card stats-card">
+      <div class="card-head"><h2>📊 إحصائيات اليوم</h2></div>
+      <div class="stat-grid">
+        <div class="stat"><b id="sSessions">0</b><small>جلسة pomodoro</small></div>
+        <div class="stat"><b id="sTasks">0</b><small>مهمة خلصتها</small></div>
+        <div class="stat"><b id="sFocus">0</b><small>دقيقة تركيز</small></div>
+        <div class="stat"><b id="sPlanned">0</b><small>ساعة مخططة</small></div>
+      </div>
+      <div class="quote" id="quote"></div>
+    </div>
+  </section>
+
+  <!-- ===================== MAIN COLUMN ===================== -->
+  <section class="col-main">
+
+    <!-- DAILY PLAN -->
+    <div class="card plan-card">
+      <div class="card-head">
+        <h2>🗓 خطة اليوم</h2>
+        <div class="head-tools">
+          <span class="badge ghost" id="planBadge">0 مهمة · 0 د</span>
+          <button class="soft-btn hot" id="sprintBtn">🔥 خطة الميدتيرم</button>
+          <button class="soft-btn" id="genPlanBtn">⚡ ولّد خطة</button>
+          <button class="soft-btn" id="addTaskBtn">＋ مهمة</button>
+          <button class="soft-btn danger" id="clearDayBtn">مسح</button>
+        </div>
+      </div>
+
+      <div class="filter-row" id="filterChips"></div>
+
+      <div class="plan-hint" id="planHint">
+        اضغط <b>⚡ ولّد خطة</b> و هو يقسّم يومك على التوبيكس (فيديو شرح ← محاضرة ← Sheet/Lab) في جلسات 25 دقيقة مع استراحات — أو <b>🔥 خطة الميدتيرم</b> عشان يوزّع الساعات على كل المواد حسب قرب كل امتحان.
+      </div>
+
+      <div class="timeline" id="timeline"></div>
+      <div class="empty" id="timelineEmpty" hidden>
+        <div class="empty-ico">📋</div>
+        <p>لسه مفيش خطة لليوم ده.</p>
+        <button class="primary-btn" id="genPlanEmpty">⚡ ولّد خطة</button>
+      </div>
+    </div>
+
+    <!-- TOPICS -->
+    <div class="card topics-card">
+      <div class="card-head">
+        <h2 id="topicsTitle">📚 التوبيكس</h2>
+        <div class="head-tools">
+          <span class="badge ghost">اضغط على الكارت عشان تفتح</span>
+        </div>
+      </div>
+      <div class="topics-grid" id="topicsGrid"></div>
+    </div>
+
+    <!-- REVIEW QUEUE -->
+    <div class="card review-card">
+      <div class="card-head"><h2>🔁 قائمة المراجعة (Spaced Review)</h2></div>
+      <div class="review-list" id="reviewList"></div>
+    </div>
+
+  </section>
+</main>
+
+<!-- ===================== FOCUS OVERLAY ===================== -->
+<div class="overlay" id="focusOverlay" hidden>
+  <div class="focus-top">
+    <div class="focus-title">
+      <span class="badge" id="focusTopicBadge">Focus</span>
+      <h3 id="focusTaskTitle">جلسة تركيز</h3>
+    </div>
+    <div class="focus-top-actions">
+      <button class="icon-btn" id="focusNotesBtn" title="ملاحظات">📝</button>
+      <button class="icon-btn" id="focusExitBtn" title="خروج (Esc)">✕</button>
+    </div>
+  </div>
+
+  <div class="focus-body">
+    <div class="focus-video">
+      <div id="focusVideoBox" class="video-box">
+        <div class="video-placeholder">
+          <div class="vp-ico">▶</div>
+          <p>مفيش فيديو متحدّد</p>
+          <small>اختار فيديو من التوبيك أو افتح البلاي ليست</small>
+        </div>
+      </div>
+      <div class="focus-links">
+        <a id="focusLec" class="soft-btn" href="#" target="_blank">📄 المحاضرة</a>
+        <a id="focusWs" class="soft-btn" href="#" target="_blank">📝 Sheet / Lab</a>
+        <a id="focusYT" class="soft-btn" href="#" target="_blank">↗ افتح على يوتيوب</a>
+        <button class="soft-btn" id="focusPrevVid" title="الفيديو السابق">⟵</button>
+        <button class="soft-btn" id="focusNextVid" title="الفيديو التالي">⟶</button>
+      </div>
+    </div>
+
+    <div class="focus-side">
+      <div class="focus-ring-wrap">
+        <svg class="ring big" viewBox="0 0 200 200">
+          <circle class="ring-bg" cx="100" cy="100" r="88"/>
+          <circle class="ring-fg" id="focusRingFg" cx="100" cy="100" r="88"/>
+        </svg>
+        <div class="ring-center">
+          <div class="mode-label" id="focusMode">تركيز</div>
+          <div class="time" id="focusTime">25:00</div>
+        </div>
+      </div>
+      <div class="focus-actions">
+        <button class="round-btn primary" id="focusStartBtn">▶</button>
+        <button class="round-btn" id="focusResetBtn">⟲</button>
+      </div>
+      <textarea id="focusNotes" class="notes" placeholder="اكتب ملاحظاتك على التوبيك ده… (بتتحفظ لوحدها)"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL ===================== -->
+<div class="modal-wrap" id="modalWrap" hidden>
+  <div class="modal-backdrop" data-close="1"></div>
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Modal</h3>
+      <button class="icon-btn" data-close="1">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
