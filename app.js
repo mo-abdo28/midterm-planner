@@ -17,7 +17,7 @@ const SUBJECTS = [
     id: 'calc2',
     name: 'CALC 2',
     full: 'Calculus II — Integration',
-    code: 'MTH 112',
+    code: 'MATH 122',
     c: '#22d3ee', c2: '#818cf8',
     exam: '2026-11-10', examTime: '10:30',
     playlistUrl: 'https://www.youtube.com/playlist?list=PLhS6ICSV4wuWys61gxA-4r00UJF48QUAm',
@@ -101,9 +101,9 @@ const SUBJECTS = [
     id: 'db',
     name: 'DATABASE',
     full: 'Database Systems',
-    code: 'CSCI 305',
+    code: 'CSC 221',
     c: '#a855f7', c2: '#f472b6',
-    exam: '2026-11-18', examTime: '12:00',
+    exam: '2026-11-12', examTime: '10:30',
     hasVideos: false,
     topics: [
       {
@@ -189,7 +189,7 @@ const SUBJECTS = [
     full: 'Data Structures & Algorithms',
     code: 'CSC 204',
     c: '#34d399', c2: '#10b981',
-    exam: '2026-11-19', examTime: '09:00',
+    exam: '2026-11-19', examTime: '10:30',
     hasVideos: false,
     topics: [
       {
@@ -498,7 +498,8 @@ const examDateTime = subId => {
   const dt = new Date(d + 'T' + (t.length === 5 ? t : '10:30') + ':00');
   return isNaN(dt.getTime()) ? null : dt;
 };
-const EXAM_DATE_FIX = { calc2: ['2026-11-12', '2026-11-10'] };
+const EXAM_DATE_FIX = { calc2: ['2026-11-12', '2026-11-10'], db: ['2026-11-18', '2026-11-12'] };
+const EXAM_TIME_FIX = { db: ['12:00', '10:30'], ds: ['09:00', '10:30'] };
 const fmtLeft = ms => {
   if (ms == null) return '-';
   if (ms <= 0) return '\u0627\u0645\u062A\u062D\u0646';
@@ -537,6 +538,8 @@ function syncExamDefaults() {
     const fix = EXAM_DATE_FIX[sub.id];
     if (fix && S.exams[sub.id] === fix[0]) S.exams[sub.id] = fix[1];
     if (!S.exams[sub.id]) S.exams[sub.id] = sub.exam;
+    const tfix = EXAM_TIME_FIX[sub.id];
+    if (tfix && S.examTimes[sub.id] === tfix[0]) S.examTimes[sub.id] = tfix[1];
     if (!S.examTimes[sub.id]) S.examTimes[sub.id] = sub.examTime || '10:30';
   });
 }
