@@ -1,60 +1,80 @@
-| ⏱ **تايمر بومودورو** | جلسات 25/5 (قابلة للتغيير) + حلقة تقدّم + عدّاد جلسات + إحصائيات يومية + 🔥 Streak |
-| ⏳ **عدّاد الميدتيرم** | التايمر يعدّلك **باقي كام ساعة ودقيقة** لحد أقرب امتحان، مع تاريخ ووقت كل امتحان وتحديث كل 30 ثانية |
-| 🎯 **Focus Mode** | شاشة تركيز كاملة: ملاحظات بتتحفظ، روابط المحاضرة/Sheet، وفيديو الشرح (Calc 2 بس) |
-| 🔥 **خطة الميدتيرم** | مولّد خطة **مشترك** بيوزّع ساعاتك على كل المواد حسب قرب كل امتحان — مش مادة واحدة |
-| ⚡ **ولّد خطة** | بيقسّم يوم واحد على التوبيكس: فيديو شرح ← محاضرة ← Sheet/Lab ← اختبار ذاتي |
-| 📚 **34 توبيك** | 5 مواد، تابات + فلتر "كل المواد" + بحث + شريط تقدّم لكل مادة |
-| 🔁 **قائمة المراجعة** | Spaced Review للتوبيكس اللي خلصتها ومحتاجة تكرار |
-| 💾 **حفظ تلقائي** | كل حاجة (الخطة، التوبيكسات، الساعات، الـstreak) في `localStorage` |
+# 🗓 Midterm Planner — خطة الميدتيرم
+
+**A single, dependency-free study planner for every Fall 2026 midterm subject at Nile University**
+(Calculus II, Database Systems, Data Structures, Probability, Circuits) — **bilingual: العربية / English**.
+
+> 🌐 **Two languages, one click.** The `EN` / `ع` button in the top bar switches the whole app
+> (Arabic ⇄ English) — including the layout direction (RTL ⇄ LTR), dates, and every modal.
+> On `localhost` it opens in Arabic; on any hosted domain it opens in English.
+> You can also force a language with `?lang=ar` or `?lang=en`.
 
 ---
 
-## 📚 المواد Covered
+## ✨ Features
 
-| المادة | الكود | تاريخ الميدتيرم | الوقت | توبيكس | فيديو |
+| Feature | What it does |
+|---|---|
+| 🌐 **Bilingual AR / EN** | Full UI translation + automatic RTL/LTR flip + locale-aware dates |
+| ⏱ **Pomodoro timer** | 25/5 sessions (configurable) + progress ring + session counter + daily stats + 🔥 streak |
+| ⏳ **Midterm countdown** | Live **days / hours / minutes** to the nearest exam, with each exam's date & time, refreshed every 30s |
+| 🎯 **Focus Mode** | Full-screen focus view: autosaving notes, lecture/Sheet links, and the lecture video (Calc 2 only) |
+| 🔥 **Midterm plan** | A **shared** generator that spreads your hours across *all* subjects by exam proximity — not one subject |
+| ⚡ **Generate today's plan** | Splits one day across topics: lecture video ← lecture ← Sheet/Lab ← self test |
+| 📚 **34 topics** | 5 subjects, subject tabs + "All subjects" filter + search + per-subject progress |
+| 🔁 **Review queue** | Spaced review for finished topics that need another pass |
+| 💾 **Auto-save** | Everything (plan, topics, hours, streak) lives in `localStorage` |
+
+---
+
+## 📚 Subjects
+
+| Subject | Code | Midterm date | Time | Topics | Video |
 |---|---|---|---|---|---|
-| Calculus II | MATH 122 | **10 / 11 / 2026** | 10:30 | 8 | ✅ 15 فيديو |
+| Calculus II | MATH 122 | **10 / 11 / 2026** | 10:30 | 8 | ✅ 15 videos |
 | Database Systems | CSC 221 | **12 / 11 / 2026** | 10:30 | 8 | ❌ |
 | Probability | MATH 202 | **15 / 11 / 2026** | 10:30 | 7 | ❌ |
 | Circuits | ECEN 111 | **17 / 11 / 2026** | 10:30 | 4 | ❌ |
 | Data Structures | CSC 204 | **19 / 11 / 2026** | 10:30 | 7 | ❌ |
 
-> التواريخ دي من جدول ميدتيرم جامعة نايل — Fall 2026. تقدر تعدّل **التاريخ والوقت** لكل مادة من زر **⚙ الإعدادات**.
+> Dates come from the Nile University midterm schedule (Fall 2026). You can edit **the date and
+> time** of every subject from the **⚙ Settings** button.
 
-**فيديوهات الشرح موجودة لـ Calc 2 بس** (playlist يوتيوب الكورس). باقي المواد مفيهاش لينك شرح — خطوات الشغل فيها هي المحاضرة والـSheet/الـLab.
+**Lecture videos exist for Calc 2 only** (the course YouTube playlist). The other subjects have no
+lecture-video links — their steps are the lecture itself plus the Sheet/Lab.
 
 ---
 
-## 🚀 التشغيل (محلي)
+## 🚀 Running it locally
 
-### الطريقة السريعة (Windows)
+### Quick way (Windows)
 ```
 افتح-الموقع.bat
 ```
-بيشغّل سيرفر محلي وبيفتح الموقع أوتوماتيك.
+Starts the local server and opens the planner automatically.
 
-### الطريقة اليدوية
+### Manual
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File server.ps1
 ```
-ثم افتح:
+Then open:
 ```
 http://localhost:8935/Midterm%20Planner/index.html
 ```
 
-### ⚠️ لازم سيرفر — مش `file://`
-يوتيوب **رافض** الـembed لما الصفحة تفتح بـ`file://`. لما تفتح `index.html` مباشرة بالم double-click هتشوف تحذير في أول الصفحة، والفيديوهات مش هتشتغل. استخدم `افتح-الموقع.bat`.
+### ⚠️ A server is required — not `file://`
+YouTube **refuses** to embed when the page is opened via `file://`. Double-clicking `index.html`
+shows a warning banner at the top and the videos will not play — use `افتح-الموقع.bat`.
 
 ---
 
-## 📁 فولدرات الكورسات (مهمة للروابط)
+## 📁 Course folders (needed for the links)
 
-الروابط **نسبية** (`../Calc 2/Lectures/...`) عشان الموقع يفضل خفيف ومحدش ينزّل 40 ميجا على GitHub.
-لازم فولدرات الكورسات تكون **جنب** فولدر الموقع بالشكل ده:
+Links are **relative** (`../Calc 2/Lectures/...`) so the site stays light and nobody downloads
+40 MB from GitHub. The course folders must sit **next to** the planner folder:
 
 ```
 Sophomore semester1/
-├── Midterm Planner/      ← الموقع (index.html, app.js, styles.css)
+├── Midterm Planner/      ← the app (index.html, app.js, styles.css)
 ├── Calc 2/               ← Lectures/ + Tutorials & Worksheets/
 ├── Database/             ← Lectures/ + Labs/
 ├── Data Structrures/     ← Lectrures/ + Labs/
@@ -62,87 +82,88 @@ Sophomore semester1/
 └── Circuits/             ← Lectures/ + Tutorials/
 ```
 
-السيرفر بيخدم فولدر `Sophomore semester1` كـroot عشان الـ`../` يشتغل.
+The server serves `Sophomore semester1` as its root so the `../` paths resolve.
 
-> 🔒 **ملفات الـPDF (محاضرات / Sheets / Labs) مش مرفوعة في المستودع** — حقوقها لـ Nile University وحجمها 40+ ميجا.
-> على نسخة GitHub هتلاقي تحذير واضح في أول الصفحة يقولك إن روابط الـPDF مش هتفتح.
-
----
-
-## 🧠 كيف بيشتغل **خطة الميدتيرم**؟
-
-دي مش خطة ليوم واحد — دي خطة **الفترة كلها** لحد آخر امتحان:
-
-1. لكل مادة: **التوبيكس الأساسية** (core) بتتوزّع بالتساوي على الأيام المتاحة بين النهارده ويوم الامتحان.
-2. بعد ما الأساسيات تتغطى، **التوبيكس الاختيارية** (optional) تدخل.
-3. لو يوم عدّى السقف اليومي (3–12 ساعة) — التوبيك **يتأجل** ليوم بعده، مش بيتشال.
-4. أي توبيك مالوش مكان في الوقت المتاح بيظهر في قائمة **"مش هيتغطى"** عشان تعرفه قبل الامتحان.
-
-الإعدادات: أقصى ساعات مذاكرة في اليوم، استثناء الجمعة والسبت، **🧪 وضع الـCrush** (ضغط كل التوبيكس في آخر الأيام قبل الامتحان).
+> 🔒 **The lecture / Sheet / Lab PDFs are NOT in this repository** — they belong to Nile University
+> and are 40+ MB. On the GitHub Pages copy a clear banner explains that the PDF links will 404.
 
 ---
 
-## ⌨️ اختصارات الكيبورد
+## 🧠 How the **midterm plan** works
 
-| المفتاح | الوظيفة |
+This is not a one-day plan — it is a plan for **the whole stretch until the last exam**:
+
+1. Per subject, the **core topics** are spread evenly over the days available between today and that exam.
+2. Once the core is covered, the **optional topics** enter the plan.
+3. If a day goes over the daily cap (3–12 h), the topic **moves to a later day** — it is never dropped.
+4. Any topic that still has no room appears in a **"won't be covered"** list so you know before the exam.
+
+Settings: max study hours per day, skip Friday & Saturday, and **🧪 Crush mode** (push every topic
+into the last days before the exam).
+
+---
+
+## ⌨️ Keyboard shortcuts
+
+| Key | Action |
 |---|---|
-| `Space` | تشغيل / إيقاف التايمر |
-| `R` | إعادة التايمر |
-| `F` | فتح Focus Mode |
-| `Esc` | إغلاق الـFocus / المودال |
-| `←` / `→` | تبديل الفيديو (جوّه Focus Mode) |
+| `Space` | Start / pause the timer |
+| `R` | Reset the timer |
+| `F` | Open Focus Mode |
+| `Esc` | Close Focus / modal |
+| `←` / `→` | Previous / next video (inside Focus Mode) |
 
 ---
 
-## 🗂 ملفات المشروع
+## 🗂 Project files
 
-| الملف | الوصف |
+| File | Description |
 |---|---|
-| `index.html` | الهيكل كامل (تابات، تايمر، كروت، مودالز، Focus overlay) |
-| `styles.css` | الدارك نيون/جلاس — كل الـCSS (≈28 KB) |
-| `app.js` | كل الـlogic: البيانات، الـstate، المولّدات، الـmodals (≈88 KB) |
-| `server.ps1` | سيرفر PowerShell بسيط (ASCII-only) بيخدم فولدر `Sophomore semester1` على بورت 8935 |
-| `افتح-الموقع.bat` | اختصار تشغيل السيرفر + فتح المتصفح |
+| `index.html` | Full markup (tabs, timer, cards, modals, focus overlay) |
+| `styles.css` | Dark neon / glass theme — the whole CSS (≈30 KB), logical properties only |
+| `app.js` | All logic + the AR/EN dictionary: data, state, generators, modals (≈120 KB) |
+| `server.ps1` | Tiny ASCII-only PowerShell server serving `Sophomore semester1` on port 8935 |
+| `افتح-الموقع.bat` | Shortcut: start the server + open the browser |
 
 ---
 
 ## 🛠 Tech
 
-- HTML + CSS + JavaScript خالص — **صفر dependencies**، صفر build step.
-- RTL كامل (`dir="rtl"`, `lang="ar"`).
+- Plain HTML + CSS + JavaScript — **zero dependencies**, zero build step.
+- Bilingual by design: one inline `I18N` dictionary (AR + EN), `T('key')` lookups, and a DOM pass
+  for the static markup; the whole layout uses CSS logical properties, so RTL ⇄ LTR flips automatically.
 - Line endings: CRLF (Windows).
-- الخطوط: Cairo + JetBrains Mono من Google Fonts (مع fallback).
-- التخزين: `localStorage` بمفتاح `midtermplanner.v1`.
+- Fonts: Cairo + JetBrains Mono from Google Fonts (with fallback).
+- Storage: `localStorage` under the key `midtermplanner.v1`.
 
 ---
 
 ## ⚖️ License
 
-الكود (HTML/CSS/JS) — للاستخدام الشخصي والدراسة. ملفات المحاضرات والـSheets والـLabs مملوكة لـ
-Nile University وغير مرفوعة في هذا المستودع.
+The code (HTML/CSS/JS) is for personal study use. Lecture, Sheet and Lab files belong to
+Nile University and are not included in this repository.
 
 ---
 
-<a name="english"></a>
+<a name="arabic"></a>
 
-## English
+## العربية
 
-**Midterm Planner** — a single, dependency-free study planner for all Fall 2026 midterm subjects
-at Nile University (Calculus II, Probability, Circuits, Database Systems, Data Structures).
+**Midterm Planner** — مخطط دراسي واحد بدون أي مكتبات خارجية لكل مواد ترم خريف 2026 في جامعة نايل
+(Calculus II, Probability, Circuits, Database Systems, Data Structures).
 
-**Features:** Pomodoro timer with streak tracking, Focus Mode with embedded YouTube lecture
-videos (Calculus II only), a shared midterm plan generator that distributes study hours across
-all subjects based on exam proximity, a per-day plan generator, 34 topics with per-subject
-progress, spaced-review queue, and full `localStorage` persistence.
+**المميزات:** تايمر بومودورو مع عدّاد أيام متتالية، Focus Mode بفيديوهات المحاضرة (Calc 2 بس)،
+مولّد **خطة ميدتيرم مشتركة** بيوزّع ساعاتك على كل المواد حسب قرب كل امتحان، مولّد خطة يومية،
+34 توبيك مع شريط تقدّم لكل مادة، قائمة مراجعة متباعدة، وحفظ كامل في `localStorage`.
 
-**Run it:** `افتح-الموقع.bat` (Windows) — it starts a local PowerShell server on port `8935`
-and opens the planner. A local server is required because YouTube refuses to embed on `file://`.
+**ثنائي اللغة:** زرار `EN` / `ع` فوق بيبدّل الموقع كله بين العربية والإنجليزي (مع قلب الاتجاه
+RTL ⇄ LTR والتواريخ). على `localhost` بيفتح عربي، وعلى أي دومين مستضاف بيفتح إنجليزي.
 
-**Course files are not included:** lecture/Sheet/Lab PDFs stay on your machine because of
-copyright and size. The app links to them with relative paths, so place the course folders
-(`Calc 2`, `Database`, `Data Structrures`, `Probability`, `Circuits`) next to the planner
-folder. When the app is served from GitHub Pages, a banner explains that PDF links will 404.
+**التشغيل:** `افتح-الموقع.bat` (ويندوز) — بيشغّل سيرفر محلي على بورت `8935` ويفتح الموقع.
+سيرفر محلي ضروري لأن يوتيوب رافض الـembed على `file://`.
 
-**Privacy:** no account, no backend, no tracking — everything lives in your browser.
+**ملفات المحاضرات مش مرفوعة:** PDFs بتفضل على جهازك (حقوق جامعة نايل + حجم 40+ ميجا)، والروابط
+نسبية، فلازم فولدرات الكورسات (`Calc 2`, `Database`, `Data Structrures`, `Probability`, `Circuits`)
+ تكون جنب فولدر الموقع. لما الموقع يتفتح من GitHub Pages هتلاقي تحذير واضح إن روابط الـPDF هترجع 404.
 
-MIT-style personal-use license for the code. Course materials belong to Nile University.
+**الخصوصية:** مفيش حساب، مفيش سيرفر، مفيش تتبع — كل حاجة في المتصفح بتاعك.

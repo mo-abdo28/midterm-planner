@@ -193,6 +193,16 @@ body{
 .progress{height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
 .progress i{display:block;height:100%;width:0;border-radius:99px;
   background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));transition:width .5s}
+/* ===== LTR (English) tweaks ===== */
+html[dir="ltr"] .chip small,
+html[dir="ltr"] .exam-row .ex-date,
+html[dir="ltr"] .sprint-day .sd-time{text-align:left}
+/* في النسخة الإنجليزية العنوان العربي بيبقى مكرر (الإنجليزي فوقه) */
+html[dir="ltr"] .topic-ar{display:none}
+/* أرقام ونصوص إنجليزية جوه عناصر RTL */
+html[dir="ltr"] .slot-sub,
+html[dir="ltr"] .slot-title{direction:ltr;text-align:left}
+
 /* عدّاد أقرب ميدتيرم جوه كارت التايمر */
 .next-exam{
   display:flex;align-items:center;gap:10px;margin-top:14px;padding:10px 12px;border-radius:14px;

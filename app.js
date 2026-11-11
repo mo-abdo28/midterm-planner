@@ -3,6 +3,669 @@
    app logic — multi-subject
    ============================================================ */
 'use strict';
+/* ============================================================
+   0) i18n - AR / EN
+   ============================================================ */
+const I18N = {
+  ar: {
+    k239:'المهمة الحالية: ',
+    k238:'مسح خطة اليوم؟',
+    k237:'جنب فولدر الموقع وشغّل <b>افتح-الموقع.bat</b> عشان كل الروابط تشتغل.',
+    k236:' فالروابط هترجع 404. نزّل مجلدات الكورسات (Calc 2 / Database / Data Structrures / Probability / Circuits) ',
+    k235:'ℹ️ نسخة GitHub: ملفات المحاضرات والـSheets والـLabs (PDF) <b>مش مرفوعة</b> في المستودع، ',
+    k234:'والفيديوهات هتشتغل، والروابط هتفتح عادي.',
+    k233:'افتح الموقع من ملف <b>افتح-الموقع.bat</b> في نفس الفولدر (أو من http://localhost) — ',
+    k232:'⚠️ فتحت الملف مباشرة، فمش هتشتغل فيديوهات يوتيوب جوّه الصفحة. ',
+    k231:'↗ افتح البلاي ليست',
+    k230:'↗ افتح على يوتيوب',
+    k229:'ركّز وامشي مع الخطة',
+    k228:'افتح المحاضرة من اللينك تحت 👇',
+    k227:'جلسة تركيز',
+    k226:'<div class="video-placeholder"><div class="vp-ico">▶</div><p>مفيش فيديو متحدّد</p></div>',
+    k225:'جلسة تركيز',
+    k224:'جلسة عامة',
+    k223:'☕ خلص البريك — يلا نرجع نشتغل',
+    k222:' د) — برااايك! ☕',
+    k221:'✅ خلصت جلسة تركيز (',
+    k220:'Midterm Planner · خطة الميدتيرم',
+    k219:'مفيش مهمة شغالة',
+    k218:'جلسة ',
+    k217:'بريك طويل',
+    k216:'بريك قصير',
+    k215:'تركيز',
+    k214:'تم المسح',
+    k213:'متأكد؟ هيمسح كل التقدّم والخطة.',
+    k212:'ملف غير صالح',
+    k211:'تم الاستيراد',
+    k210:'تم حفظ الإعدادات',
+    k208:'⚙ الإعدادات',
+    k207:'تم حفظ البلاي ليست',
+    k205:'▶ بلاي ليست يوتيوب — Calculus 2',
+    k203:'تم الحفظ',
+    k202:'تمت إضافة الفيديو',
+    k201:'لينك يوتيوب غير صحيح',
+    k199:'<div class="hint">مفيش توبيكس في قائمة المراجعة. لو محتاج حاجة تُعاد، افتح التوبك واختار حالة "محتاج مراجعة".</div>',
+    k198:'لا يوجد فيديو',
+    k197:' فيديو',
+    k196:'<span class="vid-count">🎬 الفيديو هو المصدر (مفيش PDF محلي)</span>',
+    k195:'محتاج مراجعة',
+    k194:'خلص ✅',
+    k193:'شغّال',
+    k192:'لسه مبدأتش',
+    k191:'📚 التوبيكس — ',
+    k190:'📚 كل المواد',
+    k189:'تم الحفظ',
+    k188:'مهمة',
+    k186:'✎ تعديل المهمة',
+    k185:'＋ مهمة جديدة',
+    k184:'<option value="">— بدون توبيك —</option>',
+    k183:' يوم لكل المواد 🔥',
+    k182:'تم توليد خطة ',
+    k180:'🔥 خطة الميدتيرم — كل المواد',
+    k178:' يوم',
+    k177:'باقي ',
+    k176:'باقي ',
+    k175:'امتحن ✅',
+    k174:'<div class="hint">مفيش أيام متبقية (أو التواريخ عدّت). حدّث مواعيد الميدتيرم من الإعدادات.</div>',
+    k173:'🔥 خطة الميدتيرم',
+    k172:'راجع ورقة الملخص بس ونام بدري.',
+    k171:'🌙 مراجعة خفيفة قبل النوم',
+    k170:'ركّز على الأخطاء اللي وقعت فيها، مش على الجديد.',
+    k169:'🎯 مراجعة نهائية: ملخص + 30 سؤال من كل الـSheets',
+    k168:'بعدها رجوع بالتركيز.',
+    k167:'🍽️ غدا — كلّي وامشي شوية',
+    k166:'الهدف: ',
+    k165:'أولوية أخيرة — لو الوقت سمح. ',
+    k164:'قوم اتمشّى، اشرب مية، بُص بعيد عن الشاشة.',
+    k163:'☕ بريك',
+    k162:'☕ بريك طويل',
+    k161:' جلسة',
+    k160:'تم توليد خطة: ',
+    k159:'اشرب مية، قوم اتمشّى، بُص بعيد عن الشاشة.',
+    k158:'☕ بريك قصير',
+    k157:'☕ بريك طويل',
+    k156:'الهدف: ',
+    k154:'⚡ توليد خطة اليوم',
+    k153:'<option value="urgent">الأقرب ميدتيرم الأول</option>',
+    k152:'<option value="review">المراجعة أولاً</option>',
+    k151:'<option value="weak">الأضعف الأول (اللي فاضل)</option>',
+    k150:'<option value="seq">التسلسل العادي</option>',
+    k149:'<button class="mini-btn" data-act="del" title="مسح">🗑</button>',
+    k148:'<button class="mini-btn" data-act="edit" title="تعديل">✎</button>',
+    k147:'" data-act="toggle" title="خلصت">✓</button>',
+    k146:'مهمة عامة',
+    k145:' د',
+    k144:' مهمة · ',
+    k143:' يوم',
+    k142:'امتحن',
+    k141:'ميدتيرم',
+    k140:'\u0623\u0642\u0631\u0628 \u0645\u064A\u062F\u062A\u064A\u0631\u0645',
+    k139:' د',
+    k138:'\u064A',
+    k137:'\u0627\u0644\u064A\u0648\u0645',
+    k136:'\u062F',
+    k135:'\u0633',
+    k134:'\u0633',
+    k133:'\u064A ',
+    k132:'\u0627\u0645\u062A\u062D\u0646',
+    k131:'\u062F',
+    k130:'\u0633',
+    k129:'\u064A',
+    k128:'\u0627\u0645\u062A\u062D\u0646',
+    k127:'السبت',
+    k126:'الجمعة',
+    k125:'الخميس',
+    k124:'الأربعاء',
+    k123:'الثلاثاء',
+    k122:'الإثنين',
+    k121:'الأحد',
+    k120:'خلي عينك على الهدف: الدرجات هي اللي بتفرق.',
+    k119:'الفرق بين ٩٠٪ و١٠٠٪ هو الراحة الصح في الوقت الصح.',
+    k118:'امتحن نفسك في كل مادة — المذاكرة مش بتبقى مذاكرة لحد ما تختبر.',
+    k117:'لو مفيش وقت، اعمل بومودورو واحد بس — المهم تبتدي.',
+    k116:'الـSheet هو اللي بيخليك تجيب صح في الامتحان.',
+    k115:'سؤال واحد صعب النهارده أحسن من عشرة أسئلة سهلة بكره.',
+    k114:'خد 5 دقايق بريك، مخك بيحتاجها أكتر منك.',
+    k113:'مفيش عبقري، فيه بس حد اتعلم صبر.',
+    k112:'اللي فاهمه دلوقتي أحسن من اللي حفظته امبارح.',
+    k111:'كل سطر بتكتبه بيم الساعة — أحسن من ساعتين مذاكرة وبلا فايدة.',
+    k110:'مهمة',
+    k109:'اختبار ذاتي',
+    k108:'المحاضرة',
+    k107:'فيديو الشرح',
+    k106:'اختبار ذاتي',
+    k105:'المحاضرة',
+    k104:'نظريات الدوائر (Chapter 4)',
+    k103:'اختبار ذاتي',
+    k102:'المحاضرة',
+    k101:'تحليل العقد والشبكات (Chapter 3)',
+    k100:'اختبار ذاتي',
+    k99:'المحاضرة',
+    k98:'قانون أوم وقوانين كيرشوف والتبسيط',
+    k97:'اختبار ذاتي',
+    k96:'المحاضرة',
+    k95:'عناصر الدائرة: شحنة وتيار وجهود وطاقة',
+    k94:'اختبار ذاتي',
+    k93:'المحاضرة',
+    k92:'توزيع poisson وتطبيقات',
+    k91:'اختبار ذاتي',
+    k90:'المحاضرة',
+    k89:'دالةMoment Generating والتوزيعات المتقطعة',
+    k88:'اختبار ذاتي',
+    k87:'المحاضرة',
+    k86:'المتغيرات العشوائية والتوقع والتباين',
+    k85:'اختبار ذاتي',
+    k84:'المحاضرة',
+    k83:'الاستقلال واحتمال الإجمالي وbayes',
+    k82:'اختبار ذاتي',
+    k81:'المحاضرة',
+    k80:'الاحتمال الشرطي',
+    k79:'اختبار ذاتي',
+    k78:'المحاضرة',
+    k77:'احتمال الحدث وقوانين الاحتمال',
+    k76:'اختبار ذاتي',
+    k75:'المحاضرة',
+    k74:'فضاء العينة والأحداث وقواعد العد',
+    k73:'اختبار ذاتي',
+    k72:'المحاضرة',
+    k71:'الطوابير والطوابير الدائرية',
+    k70:'اختبار ذاتي',
+    k69:'المحاضرة',
+    k68:'المكدسات: LIFO والتطبيقات',
+    k67:'اختبار ذاتي',
+    k66:'المحاضرة',
+    k65:'القوائم المرتبطة المزدوجة والدائرية',
+    k64:'اختبار ذاتي',
+    k63:'المحاضرة',
+    k62:'القوائم المرتبطة الأحادية',
+    k61:'اختبار ذاتي',
+    k60:'المحاضرة',
+    k59:'مراجعة OOP و C++ (الجزء الثاني)',
+    k58:'اختبار ذاتي',
+    k57:'المحاضرة',
+    k56:'مراجعة OOP و C++ (الجزء الأول)',
+    k55:'اختبار ذاتي',
+    k54:'المحاضرة',
+    k53:'نظرة عامة: الخوارزميات مقابل هياكل البيانات',
+    k52:'اختبار ذاتي',
+    k51:'المحاضرة',
+    k50:'إدخال وتعديل واستعلام البيانات',
+    k49:'اختبار ذاتي',
+    k48:'المحاضرة',
+    k47:'أساسيات SQL وتعريف الجداول والقيود',
+    k46:'اختبار ذاتي',
+    k45:'المحاضرة',
+    k44:'الجبر العلائقي والعمليات والـjoins',
+    k43:'اختبار ذاتي',
+    k42:'المحاضرة',
+    k41:'تحويل ER/EER لجداول علائقية (١٠ حالات)',
+    k40:'اختبار ذاتي',
+    k39:'المحاضرة',
+    k38:'التصميم المنطقي والنموذج العلائقي',
+    k37:'اختبار ذاتي',
+    k36:'المحاضرة',
+    k35:'النموذج المحسّن EER والقيود',
+    k34:'اختبار ذاتي',
+    k33:'المحاضرة',
+    k32:'نموذج الكيانات والعلاقات ER',
+    k31:'اختبار ذاتي',
+    k30:'المحاضرة',
+    k29:'بيئة قاعدة البيانات وخريطة الكورس',
+    k28:'اختبار ذاتي',
+    k27:'فيديو الشرح',
+    k26:'تطبيقات التكامل المحدود (طول القوس ومساحة السطح)',
+    k25:'اختبار ذاتي',
+    k24:'فيديو الشرح',
+    k23:'التكاملات غير المحدودة',
+    k22:'اختبار ذاتي',
+    k21:'فيديو الشرح',
+    k20:'التكامل العددي (ترابيزول + سيمبسون)',
+    k19:'اختبار ذاتي',
+    k18:'المحاضرة',
+    k17:'فيديو الشرح',
+    k16:'الكسور الجزئية',
+    k15:'اختبار ذاتي',
+    k14:'المحاضرة',
+    k13:'فيديو الشرح',
+    k12:'التكاملات المثلثية والتعويض المثلثي',
+    k11:'اختبار ذاتي',
+    k10:'المحاضرة',
+    k9:'التكامل بالجزء وصيغة الاختزال',
+    k8:'اختبار ذاتي',
+    k7:'المحاضرة',
+    k6:'فيديو الشرح',
+    k5:'التعويض وإكمال المربع',
+    k4:'اختبار ذاتي',
+    k3:'المحاضرة',
+    k2:'فيديو الشرح',
+    k1:'المراجعة والتكامل غير المحدد',
+    h34:"📚 التوبيكس",
+    h8:"⚠️ فتحت الموقع بـ",
+    h27:"⚡ ولّد خطة",
+    a5:"التوبيكس اللي خلصتها",
+    a10:"إعادة (R)",
+    a12:"ملاحظات",
+    h2:"خطة ميدتيرم لكل المواد",
+    h32:"عشان يوزّع الساعات على كل المواد حسب قرب كل امتحان.",
+    h28:"＋ مهمة",
+    h31:"و هو يقسّم يومك على التوبيكس (فيديو شرح ← محاضرة ← Sheet/Lab) في جلسات 25 دقيقة مع استراحات — أو",
+    a1:"اليوم السابق",
+    h15:"مفيش مهمة شغالة",
+    h1:"Midterm Planner · خطة الميدتيرم لكل المواد",
+    h9:"— الفيديوهات مش هتشتغل. شغّل",
+    h10:"افتح-الموقع.bat",
+    h33:"لسه مفيش خطة لليوم ده.",
+    h22:"مهمة خلصتها",
+    a11:"تخطي (Session)",
+    h24:"🗓 خطة اليوم",
+    a14:"الفيديو السابق",
+    h25:"0 مهمة · 0 د",
+    h35:"اضغط على الكارت عشان تفتح",
+    a7:"البلاي ليست",
+    h38:"مفيش فيديو متحدّد",
+    h4:"/ 240 د",
+    h14:"تركيز",
+    h23:"ساعة مخططة",
+    a4:"أيام متتالية",
+    h16:"ساعات التركيز النهارده",
+    h20:"📊 إحصائيات اليوم",
+    a15:"الفيديو التالي",
+    h21:"جلسة pomodoro",
+    h37:"جلسة تركيز",
+    h6:"توبيكس",
+    h41:"↗ افتح على يوتيوب",
+    a3:"ساعات التركيز النهارده",
+    h11:"بدل كده.",
+    h40:"📄 المحاضرة",
+    h17:"د",
+    h29:"مسح",
+    h39:"اختار فيديو من التوبيك أو افتح البلاي ليست",
+    h7:"للميدتيرم",
+    h19:"⏳ الميدتيرمات",
+    a13:"خروج (Esc)",
+    h26:"🔥 خطة الميدتيرم",
+    h3:"النهارده",
+    a9:"تشغيل / إيقاف (Space)",
+    h36:"🔁 قائمة المراجعة (Spaced Review)",
+    h5:"يوم متتالي",
+    a8:"الإعدادات",
+    a16:"اكتب ملاحظاتك على التوبيك ده… (بتتحفظ لوحدها)",
+    a2:"اليوم التالي",
+    h12:"⏱ تايمر بومودورو",
+    h18:"دقيقة تركيز",
+    a6:"أقرب ميدتيرم",
+    h30:"اضغط",
+    h13:"جلسة 0"
+  },
+  en: {
+    k239:"Current task: ",
+    k238:"Clear today\u0027s plan?",
+    k237:"next to the site folder and run \u003cb\u003eافتح-الموقع.bat\u003c/b\u003e so every link works.",
+    k236:" so the links will 404. Download the course folders (Calc 2 / Database / Data Structrures / Probability / Circuits) ",
+    k235:"ℹ️ GitHub version: the lecture, Sheet and Lab files (PDF) are \u003cb\u003enot included\u003c/b\u003e in the repo, ",
+    k234:"and the videos will play and the links will work.",
+    k233:"Open the site from \u003cb\u003eافتح-الموقع.bat\u003c/b\u003e in the same folder (or from http://localhost) — ",
+    k232:"⚠️ You opened the file directly, so YouTube videos won\u0027t play inside the page. ",
+    k231:"↗ Open the playlist",
+    k230:"↗ Open on YouTube",
+    k229:"Focus and follow the plan",
+    k228:"Open the lecture from the link below 👇",
+    k227:"Focus session",
+    k226:"\u003cdiv class=\"video-placeholder\"\u003e\u003cdiv class=\"vp-ico\"\u003e▶\u003c/div\u003e\u003cp\u003eNo video selected\u003c/p\u003e\u003c/div\u003e",
+    k225:"Focus session",
+    k224:"General session",
+    k223:"☕ Break over — back to work",
+    k222:" m) — take a break! ☕",
+    k221:"✅ Focus session done (",
+    k220:"Midterm Planner · Midterm plan",
+    k219:"No active task",
+    k218:" session ",
+    k217:"Long break",
+    k216:"Short break",
+    k215:"Focus",
+    k214:"Cleared",
+    k213:"Are you sure? This clears all progress and the plan.",
+    k212:"Invalid file",
+    k211:"Imported",
+    k210:"Settings saved",
+    k208:"⚙ Settings",
+    k207:"Playlist saved",
+    k205:"▶ YouTube playlist — Calculus 2",
+    k203:"Saved",
+    k202:"Video added",
+    k201:"Invalid YouTube link",
+    k199:"\u003cdiv class=\"hint\"\u003eNothing in the review queue. To repeat something, open the topic and set its status to \"Needs review\".\u003c/div\u003e",
+    k198:"No video",
+    k197:" videos",
+    k196:"\u003cspan class=\"vid-count\"\u003e🎬 The video is the source (no local PDF)\u003c/span\u003e",
+    k195:"Needs review",
+    k194:"Done ✅",
+    k193:"In progress",
+    k192:"Not started",
+    k191:"📚 Topics — ",
+    k190:"📚 All subjects",
+    k189:"Saved",
+    k188:"Task",
+    k186:"✎ Edit task",
+    k185:"＋ New task",
+    k184:"\u003coption value=\"\"\u003e— No topic —\u003c/option\u003e",
+    k183:" days, all subjects 🔥",
+    k182:"Plan generated for ",
+    k180:"🔥 Midterm plan — all subjects",
+    k178:" days",
+    k177:"Left: ",
+    k176:"Left: ",
+    k175:"Exam done ✅",
+    k174:"\u003cdiv class=\"hint\"\u003eNo days left (or the dates already passed). Update the exam dates in Settings.\u003c/div\u003e",
+    k173:"🔥 Midterm plan",
+    k172:"Review the summary sheet only and sleep early.",
+    k171:"🌙 Light review before bed",
+    k170:"Focus on the mistakes you made, not on the new material.",
+    k169:"🎯 Final review: summary sheet + 30 questions from each Sheet",
+    k168:"Then back to full focus.",
+    k167:"🍽️ Tomorrow — finish it up and take a walk",
+    k166:"Goal: ",
+    k165:"Last priority — if time allows. ",
+    k164:"Walk around, drink some water, look away from the screen.",
+    k163:"☕ Break",
+    k162:"☕ Long break",
+    k161:" sessions",
+    k160:"Plan generated: ",
+    k159:"Drink some water, walk a bit, look away from the screen.",
+    k158:"☕ Short break",
+    k157:"☕ Long break",
+    k156:"Goal: ",
+    k154:"⚡ Generate today\u0027s plan",
+    k153:"\u003coption value=\"urgent\"\u003eNearest exam first\u003c/option\u003e",
+    k152:"\u003coption value=\"review\"\u003eReview first\u003c/option\u003e",
+    k151:"\u003coption value=\"weak\"\u003eWeakest first (what\u0027s left)\u003c/option\u003e",
+    k150:"\u003coption value=\"seq\"\u003eNormal order\u003c/option\u003e",
+    k149:"\u003cbutton class=\"mini-btn\" data-act=\"del\" title=\"Delete\"\u003e🗑\u003c/button\u003e",
+    k148:"\u003cbutton class=\"mini-btn\" data-act=\"edit\" title=\"Edit\"\u003e✎\u003c/button\u003e",
+    k147:"\" data-act=\"toggle\" title=\"Done\"\u003e✓\u003c/button\u003e",
+    k146:"General task",
+    k145:" m",
+    k144:" tasks · ",
+    k143:" day",
+    k142:"Passed",
+    k141:"midterm",
+    k140:"Nearest midterm",
+    k139:" m",
+    k138:"d",
+    k137:"Today",
+    k136:"m",
+    k135:"h",
+    k134:"h",
+    k133:"d ",
+    k132:"Passed",
+    k131:"m",
+    k130:"h",
+    k129:"d",
+    k128:"Passed",
+    k127:"Saturday",
+    k126:"Friday",
+    k125:"Thursday",
+    k124:"Wednesday",
+    k123:"Tuesday",
+    k122:"Monday",
+    k121:"Sunday",
+    k120:"Keep your eyes on the prize: grades are what make the difference.",
+    k119:"The gap between 90% and 100% is resting at the right time.",
+    k118:"Test yourself in every subject — study isn\u0027t study until you test.",
+    k117:"No time? Do a single Pomodoro — the important part is starting.",
+    k116:"The Sheet is what gets you the right answer in the exam.",
+    k115:"One hard question today beats ten easy ones tomorrow.",
+    k114:"Take a 5-minute break — your brain needs it more than you do.",
+    k113:"No genius, just someone who learned patience.",
+    k112:"What you understand now beats what you memorised yesterday.",
+    k111:"Every line you write costs an hour — better than two hours of study with nothing to show.",
+    k110:"Task",
+    k109:"Self test",
+    k108:"Lecture",
+    k107:"Lecture video",
+    k106:"Self test",
+    k105:"Lecture",
+    k104:"Circuit theorems (Chapter 4)",
+    k103:"Self test",
+    k102:"Lecture",
+    k101:"Nodal \u0026 mesh analysis (Chapter 3)",
+    k100:"Self test",
+    k99:"Lecture",
+    k98:"Ohm\u0027s law, Kirchhoff\u0027s laws \u0026 simplification",
+    k97:"Self test",
+    k96:"Lecture",
+    k95:"Circuit elements: charge, current, voltage \u0026 power",
+    k94:"Self test",
+    k93:"Lecture",
+    k92:"Poisson distribution \u0026 applications",
+    k91:"Self test",
+    k90:"Lecture",
+    k89:"Moment generating function \u0026 discrete distributions",
+    k88:"Self test",
+    k87:"Lecture",
+    k86:"Random variables, expectation \u0026 variance",
+    k85:"Self test",
+    k84:"Lecture",
+    k83:"Independence, total probability \u0026 Bayes",
+    k82:"Self test",
+    k81:"Lecture",
+    k80:"Conditional probability",
+    k79:"Self test",
+    k78:"Lecture",
+    k77:"Probability of events \u0026 probability laws",
+    k76:"Self test",
+    k75:"Lecture",
+    k74:"Sample space, events \u0026 counting rules",
+    k73:"Self test",
+    k72:"Lecture",
+    k71:"Queues \u0026 circular queues",
+    k70:"Self test",
+    k69:"Lecture",
+    k68:"Stacks: LIFO \u0026 applications",
+    k67:"Self test",
+    k66:"Lecture",
+    k65:"Doubly \u0026 circular linked lists",
+    k64:"Self test",
+    k63:"Lecture",
+    k62:"Singly linked lists",
+    k61:"Self test",
+    k60:"Lecture",
+    k59:"OOP \u0026 C++ recap (part 2)",
+    k58:"Self test",
+    k57:"Lecture",
+    k56:"OOP \u0026 C++ recap (part 1)",
+    k55:"Self test",
+    k54:"Lecture",
+    k53:"Overview: algorithms vs data structures",
+    k52:"Self test",
+    k51:"Lecture",
+    k50:"Inserting, updating \u0026 querying data",
+    k49:"Self test",
+    k48:"Lecture",
+    k47:"SQL basics, table definition \u0026 constraints",
+    k46:"Self test",
+    k45:"Lecture",
+    k44:"Relational algebra, operations \u0026 joins",
+    k43:"Self test",
+    k42:"Lecture",
+    k41:"ER/EER to relational tables (10 cases)",
+    k40:"Self test",
+    k39:"Lecture",
+    k38:"Logical design \u0026 relational model",
+    k37:"Self test",
+    k36:"Lecture",
+    k35:"Enhanced ER (EER) \u0026 constraints",
+    k34:"Self test",
+    k33:"Lecture",
+    k32:"ER model (entities \u0026 relationships)",
+    k31:"Self test",
+    k30:"Lecture",
+    k29:"Database environment \u0026 course map",
+    k28:"Self test",
+    k27:"Lecture video",
+    k26:"Definite integral applications (arc length \u0026 surface area)",
+    k25:"Self test",
+    k24:"Lecture video",
+    k23:"Improper integrals",
+    k22:"Self test",
+    k21:"Lecture video",
+    k20:"Numerical integration (trapezoid + Simpson)",
+    k19:"Self test",
+    k18:"Lecture",
+    k17:"Lecture video",
+    k16:"Partial fractions",
+    k15:"Self test",
+    k14:"Lecture",
+    k13:"Lecture video",
+    k12:"Trigonometric integrals \u0026 trig substitution",
+    k11:"Self test",
+    k10:"Lecture",
+    k9:"Integration by parts \u0026 reduction formula",
+    k8:"Self test",
+    k7:"Lecture",
+    k6:"Lecture video",
+    k5:"Substitution \u0026 completing the square",
+    k4:"Self test",
+    k3:"Lecture",
+    k2:"Lecture video",
+    k1:"Revision \u0026 indefinite integrals",
+    h34:"📚 Topics",
+    h8:"⚠️ You opened the site with",
+    h27:"⚡ Generate plan",
+    a5:"topics done",
+    a10:"Reset (R)",
+    a12:"Notes",
+    h2:"Midterm plan for all subjects",
+    h32:"to spread your hours across all subjects by exam proximity.",
+    h28:"＋ Task",
+    h31:"and it splits your day across topics (lecture video ← lecture ← Sheet/Lab) into 25-minute sessions with breaks — or",
+    a1:"Previous day",
+    h15:"No active task",
+    h1:"Midterm Planner · Midterm plan for all subjects",
+    h9:"— the videos won\u0027t play. Run",
+    h10:"افتح-الموقع.bat",
+    h33:"No plan for today yet.",
+    h22:"tasks done",
+    a11:"Skip (Session)",
+    h24:"🗓 Today\u0027s plan",
+    a14:"Previous video",
+    h25:"0 tasks · 0 m",
+    h35:"Click a card to open",
+    a7:"Playlist",
+    h38:"No video selected",
+    h4:"/ 240 m",
+    h14:"focus",
+    h23:"hours planned",
+    a4:"day streak",
+    h16:"Focus hours today",
+    h20:"📊 Today\u0027s stats",
+    a15:"Next video",
+    h21:"pomodoro session",
+    h37:"Focus session",
+    h6:"topics",
+    h41:"↗ Open on YouTube",
+    a3:"Focus hours today",
+    h11:"instead.",
+    h40:"📄 Lecture",
+    h17:"m",
+    h29:"Clear",
+    h39:"Pick a video from the topic or open the playlist",
+    h7:"to midterm",
+    h19:"⏳ Midterms",
+    a13:"Exit (Esc)",
+    h26:"🔥 Midterm plan",
+    h3:"Today",
+    a9:"Start / pause (Space)",
+    h36:"🔁 Review queue (Spaced Review)",
+    h5:"day streak",
+    a8:"Settings",
+    a16:"Write your notes on this topic... (saved automatically)",
+    a2:"Next day",
+    h12:"⏱ Pomodoro timer",
+    h18:"focus minutes",
+    a6:"Nearest midterm",
+    h30:"Press",
+    h13:"0 sessions"
+  }
+};
+let LANG = (function () {
+  try {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q === 'ar' || q === 'en') return q;
+    const raw = localStorage.getItem('midtermplanner.v1');
+    if (raw) {
+      const sv = JSON.parse(raw);
+      if (sv && sv.settings && (sv.settings.lang === 'ar' || sv.settings.lang === 'en')) return sv.settings.lang;
+    }
+  } catch (e) { }
+  const h = (location.hostname || '').toLowerCase();
+  const local = !h || h === 'localhost' || h === '127.0.0.1' || h === '::1';
+  return local ? 'ar' : 'en';
+})();
+function T(key) {
+  const d = I18N[LANG] || I18N.ar;
+  if (d[key] !== undefined) return d[key];
+  return I18N.ar[key] !== undefined ? I18N.ar[key] : key;
+}
+const AR2K = Object.create(null), EN2K = Object.create(null);
+(function () {
+  for (const k in I18N.ar) {
+    const c = k.charAt(0);
+    if (c !== 'h' && c !== 'a') continue;
+    AR2K[I18N.ar[k]] = k;
+    if (I18N.en[k] !== undefined) EN2K[I18N.en[k]] = k;
+  }
+})();
+function applyStaticLang() {
+  if (!document.body) return;
+  const map = LANG === 'en' ? AR2K : EN2K;
+  const target = I18N[LANG];
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+  let node;
+  while ((node = w.nextNode())) {
+    const raw = node.nodeValue;
+    if (!raw) continue;
+    const t = raw.trim();
+    if (!t) continue;
+    const key = map[t];
+    if (!key) continue;
+    const at = raw.indexOf(t);
+    node.nodeValue = raw.slice(0, at) + target[key] + raw.slice(at + t.length);
+  }
+  const els = document.body.querySelectorAll('[title],[placeholder],[aria-label]');
+  for (let i = 0; i < els.length; i++) {
+    const el = els[i];
+    const attrs = ['title', 'placeholder', 'aria-label'];
+    for (let j = 0; j < attrs.length; j++) {
+      const attr = attrs[j];
+      if (!el.hasAttribute(attr)) continue;
+      const v = el.getAttribute(attr);
+      const key = map[v];
+      if (!key) continue;
+      el.setAttribute(attr, target[key]);
+    }
+  }
+  if (document.title) {
+    const key = map[document.title.trim()];
+    if (key) document.title = target[key];
+  }
+}
+function updateLangBtn() {
+  const b = document.getElementById('langBtn');
+  if (!b) return;
+  b.textContent = LANG === 'en' ? '\u0639' : 'EN';
+  b.title = LANG === 'en' ? 'Switch to Arabic' : 'Switch to English';
+}
+function setLang(l) {
+  LANG = (l === 'en') ? 'en' : 'ar';
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = LANG === 'en' ? 'ltr' : 'rtl';
+  try { if (typeof S !== 'undefined' && S.settings) { S.settings.lang = LANG; save(); } } catch (e) { }
+  try { initData(); } catch (e) { }
+  applyStaticLang();
+  updateLangBtn();
+  try { renderAll(); } catch (e) { }
+}
 
 /* ============================================================
    1) المواد والتوبيكس
@@ -12,7 +675,10 @@
    subject.examTaken = هل خلص امتحانه (يتحسب من التاريخ).
    subject.core = التوبيكس الأساسية اللي لازم تتغطي، optional = بونص. */
 
-const SUBJECTS = [
+let SUBJECTS = [], STEP_META = {}, QUOTES = [], DAY_NAMES = [];
+const STORE_KEY = 'midtermplanner.v1';
+function initData() {
+SUBJECTS = [
   {
     id: 'calc2',
     name: 'CALC 2',
@@ -24,72 +690,72 @@ const SUBJECTS = [
     hasVideos: true,
     topics: [
       {
-        id: 'c1', n: 1, title: 'Revision & Indefinite Integral', ar: 'المراجعة والتكامل غير المحدد',
+        id: 'c1', n: 1, title: 'Revision & Indefinite Integral', ar: T('k1'),
         c: '#22d3ee', c2: '#818cf8', glow: 'rgba(34,211,238,.20)',
         lectures: ['../Calc 2/Lectures/Lec 1.pdf'],
         ws: ['../Calc 2/Tutorials & Worksheets/Ws_1.pdf'],
         steps: ['video', 'lecture', 'ws', 'test'],
-        stepLabels: { video: 'فيديو الشرح', lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { video: T('k2'), lecture: T('k3'), ws: 'Sheet', test: T('k4') },
         kw: ['revision', 'indefinite', 'integral', 'antiderivative', 'basic']
       },
       {
-        id: 'c2', n: 2, title: 'Substitution & Completing the Square', ar: 'التعويض وإكمال المربع',
+        id: 'c2', n: 2, title: 'Substitution & Completing the Square', ar: T('k5'),
         c: '#a855f7', c2: '#f472b6', glow: 'rgba(168,85,247,.20)',
         lectures: ['../Calc 2/Lectures/Lec2 summer 25 _part1 substitutin.pdf'],
         ws: ['../Calc 2/Tutorials & Worksheets/Ws_2.pdf'],
         steps: ['video', 'lecture', 'ws', 'test'],
-        stepLabels: { video: 'فيديو الشرح', lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { video: T('k6'), lecture: T('k7'), ws: 'Sheet', test: T('k8') },
         kw: ['substitution', 'completing', 'square', 'u-sub']
       },
       {
-        id: 'c3', n: 3, title: 'Integration by Parts & Reduction Formula', ar: 'التكامل بالجزء وصيغة الاختزال',
+        id: 'c3', n: 3, title: 'Integration by Parts & Reduction Formula', ar: T('k9'),
         c: '#fbbf24', c2: '#fb923c', glow: 'rgba(251,191,36,.18)',
         lectures: ['../Calc 2/Lectures/lec_2 -summer25 part2 byparts.pdf', '../Calc 2/Lectures/Lec_4-reduction.pdf'],
         ws: ['../Calc 2/Tutorials & Worksheets/Ws_3 by Parts and reduction formula.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k10'), ws: 'Sheet', test: T('k11') },
         kw: ['parts', 'part', 'reduction', 'ibp', 'by parts']
       },
       {
-        id: 'c4', n: 4, title: 'Trigonometric Integrals & Trig Substitution', ar: 'التكاملات المثلثية والتعويض المثلثي',
+        id: 'c4', n: 4, title: 'Trigonometric Integrals & Trig Substitution', ar: T('k12'),
         c: '#34d399', c2: '#22d3ee', glow: 'rgba(52,211,153,.18)',
         lectures: ['../Calc 2/Lectures/Lecture 3 part 2.pdf', '../Calc 2/Lectures/Lec_4-Trig integral_trig sub.pdf'],
         ws: ['../Calc 2/Tutorials & Worksheets/Ws_4 Trig Integrals and Trig Substitution.pdf'],
         steps: ['video', 'lecture', 'ws', 'test'],
-        stepLabels: { video: 'فيديو الشرح', lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { video: T('k13'), lecture: T('k14'), ws: 'Sheet', test: T('k15') },
         kw: ['trig', 'trigonometric', 'sin', 'cos', 'tan', 'substitution']
       },
       {
-        id: 'c5', n: 5, title: 'Partial Fractions', ar: 'الكسور الجزئية',
+        id: 'c5', n: 5, title: 'Partial Fractions', ar: T('k16'),
         c: '#fb7185', c2: '#f472b6', glow: 'rgba(251,113,133,.18)',
         lectures: ['../Calc 2/Lectures/Lec_5-patrial fractions.pdf'],
         ws: ['../Calc 2/Tutorials & Worksheets/Ws_5 Partial fractions.pdf'],
         steps: ['video', 'lecture', 'ws', 'test'],
-        stepLabels: { video: 'فيديو الشرح', lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { video: T('k17'), lecture: T('k18'), ws: 'Sheet', test: T('k19') },
         kw: ['partial', 'fraction', 'fractions']
       },
       {
-        id: 'c6', n: 6, title: 'Numerical Integration', ar: 'التكامل العددي (ترابيزول + سيمبسون)',
+        id: 'c6', n: 6, title: 'Numerical Integration', ar: T('k20'),
         c: '#38bdf8', c2: '#818cf8', glow: 'rgba(56,189,248,.18)',
         lectures: [], ws: [],
         steps: ['video', 'test'],
-        stepLabels: { video: 'فيديو الشرح', test: 'اختبار ذاتي' },
+        stepLabels: { video: T('k21'), test: T('k22') },
         kw: ['numerical', 'trapezoidal', 'simpson']
       },
       {
-        id: 'c7', n: 7, title: 'Improper Integrals', ar: 'التكاملات غير المحدودة',
+        id: 'c7', n: 7, title: 'Improper Integrals', ar: T('k23'),
         c: '#c084fc', c2: '#f0abfc', glow: 'rgba(192,132,252,.18)',
         lectures: [], ws: [],
         steps: ['video', 'test'],
-        stepLabels: { video: 'فيديو الشرح', test: 'اختبار ذاتي' },
+        stepLabels: { video: T('k24'), test: T('k25') },
         kw: ['improper', 'infinity', 'discontinuous']
       },
       {
-        id: 'c8', n: 8, title: 'Applications of Definite Integral', ar: 'تطبيقات التكامل المحدود (طول القوس ومساحة السطح)',
+        id: 'c8', n: 8, title: 'Applications of Definite Integral', ar: T('k26'),
         c: '#fb923c', c2: '#fbbf24', glow: 'rgba(251,146,60,.18)',
         lectures: [], ws: [],
         steps: ['video', 'test'],
-        stepLabels: { video: 'فيديو الشرح', test: 'اختبار ذاتي' },
+        stepLabels: { video: T('k27'), test: T('k28') },
         kw: ['applications', 'arc', 'length', 'surface', 'revolution']
       }
     ],
@@ -107,75 +773,75 @@ const SUBJECTS = [
     hasVideos: false,
     topics: [
       {
-        id: 'd1', n: 1, title: 'Database Environment & Course Roadmap', ar: 'بيئة قاعدة البيانات وخريطة الكورس',
+        id: 'd1', n: 1, title: 'Database Environment & Course Roadmap', ar: T('k29'),
         c: '#a855f7', c2: '#f472b6', glow: 'rgba(168,85,247,.18)',
         lectures: ['../Database/Lectures/Introduction -Fall2026.pdf'],
         ws: [],
         steps: ['lecture', 'test'],
-        stepLabels: { lecture: 'المحاضرة', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k30'), test: T('k31') },
         kw: ['introduction', 'roadmap', 'overview']
       },
       {
-        id: 'd2', n: 2, title: 'The ER Model — Concepts, Notation & Design Guidelines', ar: 'نموذج الكيانات والعلاقات ER',
+        id: 'd2', n: 2, title: 'The ER Model — Concepts, Notation & Design Guidelines', ar: T('k32'),
         c: '#f472b6', c2: '#fb7185', glow: 'rgba(244,114,182,.18)',
         lectures: ['../Database/Lectures/Lecture 2 -ER - Scenario2.pdf'],
         ws: ['../Database/Labs/Lab 1.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k33'), ws: 'Lab', test: T('k34') },
         kw: ['er', 'entity', 'relationship', 'diagram']
       },
       {
-        id: 'd3', n: 3, title: 'Enhanced ER Model — Specialization, Generalization & Constraints', ar: 'النموذج المحسّن EER والقيود',
+        id: 'd3', n: 3, title: 'Enhanced ER Model — Specialization, Generalization & Constraints', ar: T('k35'),
         c: '#fb7185', c2: '#f43f5e', glow: 'rgba(251,113,133,.18)',
         lectures: ['../Database/Lectures/Lecture 3 (2) (1).pdf'],
         ws: ['../Database/Labs/lab 2.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k36'), ws: 'Lab', test: T('k37') },
         kw: ['eer', 'supertype', 'subtype', 'generalization', 'specialization']
       },
       {
-        id: 'd4', n: 4, title: 'Logical Design & the Relational Model', ar: 'التصميم المنطقي والنموذج العلائقي',
+        id: 'd4', n: 4, title: 'Logical Design & the Relational Model', ar: T('k38'),
         c: '#c084fc', c2: '#a855f7', glow: 'rgba(192,132,252,.18)',
         lectures: ['../Database/Lectures/Lecture 4.pdf'],
         ws: ['../Database/Labs/lab 3.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k39'), ws: 'Lab', test: T('k40') },
         kw: ['relational', 'mapping', 'schema', 'logical']
       },
       {
-        id: 'd5', n: 5, title: 'ER/EER → Relational Schema: The 10 Mapping Cases', ar: 'تحويل ER/EER لجداول علائقية (١٠ حالات)',
+        id: 'd5', n: 5, title: 'ER/EER → Relational Schema: The 10 Mapping Cases', ar: T('k41'),
         c: '#818cf8', c2: '#22d3ee', glow: 'rgba(129,140,248,.18)',
         lectures: ['../Database/Lectures/Lecture 4.pdf'],
         ws: ['../Database/Labs/lab 3.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k42'), ws: 'Lab', test: T('k43') },
         kw: ['mapping', 'cases', 'foreign', 'primary', 'referential']
       },
       {
-        id: 'd6', n: 6, title: 'Relational Algebra — Operators, Set Operations & Joins', ar: 'الجبر العلائقي والعمليات والـjoins',
+        id: 'd6', n: 6, title: 'Relational Algebra — Operators, Set Operations & Joins', ar: T('k44'),
         c: '#22d3ee', c2: '#38bdf8', glow: 'rgba(34,211,238,.18)',
         lectures: ['../Database/Lectures/Lec (Relational Algebra) (2).pdf', '../Database/Lectures/Lec (Relational Algebra Exercise).pdf'],
         ws: [],
         steps: ['lecture', 'test'],
-        stepLabels: { lecture: 'المحاضرة', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k45'), test: T('k46') },
         kw: ['relational', 'algebra', 'join', 'sigma', 'projection', 'division']
       },
       {
-        id: 'd7', n: 7, title: 'SQL Foundations — Schema Definition & Constraints (DDL)', ar: 'أساسيات SQL وتعريف الجداول والقيود',
+        id: 'd7', n: 7, title: 'SQL Foundations — Schema Definition & Constraints (DDL)', ar: T('k47'),
         c: '#34d399', c2: '#10b981', glow: 'rgba(52,211,153,.18)',
         lectures: ['../Database/Lectures/Lecture Sql Part 1 mod (1).pdf'],
         ws: ['../Database/Labs/Lab 4.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k48'), ws: 'Lab', test: T('k49') },
         kw: ['sql', 'ddl', 'create', 'alter', 'constraint', 'primary', 'foreign']
       },
       {
-        id: 'd8', n: 8, title: 'SQL Data Manipulation & Querying (DML / DQL)', ar: 'إدخال وتعديل واستعلام البيانات',
+        id: 'd8', n: 8, title: 'SQL Data Manipulation & Querying (DML / DQL)', ar: T('k50'),
         c: '#fbbf24', c2: '#f59e0b', glow: 'rgba(251,191,36,.18)',
         lectures: ['../Database/Lectures/Lecture Sql Part 1 mod (1).pdf'],
         ws: ['../Database/Labs/Lab 5.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k51'), ws: 'Lab', test: T('k52') },
         kw: ['sql', 'select', 'insert', 'update', 'delete', 'join', 'group', 'having', 'union']
       }
     ],
@@ -193,66 +859,66 @@ const SUBJECTS = [
     hasVideos: false,
     topics: [
       {
-        id: 's1', n: 1, title: 'Course Overview — Algorithms vs Data Structures', ar: 'نظرة عامة: الخوارزميات مقابل هياكل البيانات',
+        id: 's1', n: 1, title: 'Course Overview — Algorithms vs Data Structures', ar: T('k53'),
         c: '#34d399', c2: '#10b981', glow: 'rgba(52,211,153,.18)',
         lectures: ['../Data Structrures/Lectrures/Lecture 0 - Course Overview.pdf'],
         ws: [],
         steps: ['lecture', 'test'],
-        stepLabels: { lecture: 'المحاضرة', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k54'), test: T('k55') },
         kw: ['overview', 'algorithm', 'efficiency', 'memory']
       },
       {
-        id: 's2', n: 2, title: 'OOP & C++ Review I — Classes, Encapsulation, Constructors', ar: 'مراجعة OOP و C++ (الجزء الأول)',
+        id: 's2', n: 2, title: 'OOP & C++ Review I — Classes, Encapsulation, Constructors', ar: T('k56'),
         c: '#22d3ee', c2: '#818cf8', glow: 'rgba(34,211,238,.18)',
         lectures: ['../Data Structrures/Lectrures/Lecture 01.pdf'],
         ws: [],
         steps: ['lecture', 'test'],
-        stepLabels: { lecture: 'المحاضرة', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k57'), test: T('k58') },
         kw: ['class', 'object', 'encapsulation', 'constructor', 'destructor']
       },
       {
-        id: 's3', n: 3, title: 'OOP & C++ Review II — Templates, Inheritance, Polymorphism', ar: 'مراجعة OOP و C++ (الجزء الثاني)',
+        id: 's3', n: 3, title: 'OOP & C++ Review II — Templates, Inheritance, Polymorphism', ar: T('k59'),
         c: '#818cf8', c2: '#a855f7', glow: 'rgba(129,140,248,.18)',
         lectures: ['../Data Structrures/Lectrures/Lecture 02.pdf'],
         ws: ['../Data Structrures/Labs/Lab 02.zip'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k60'), ws: 'Lab', test: T('k61') },
         kw: ['template', 'inheritance', 'polymorphism', 'overriding', 'generic']
       },
       {
-        id: 's4', n: 4, title: 'Singly Linked Lists — Traversal, Insertion & Deletion', ar: 'القوائم المرتبطة الأحادية',
+        id: 's4', n: 4, title: 'Singly Linked Lists — Traversal, Insertion & Deletion', ar: T('k62'),
         c: '#fbbf24', c2: '#f59e0b', glow: 'rgba(251,191,36,.18)',
         lectures: ['../Data Structrures/Lectrures/Lecture 03 - liked list p1 new.pdf'],
         ws: ['../Data Structrures/Labs/Lab 03.zip'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k63'), ws: 'Lab', test: T('k64') },
         kw: ['linked', 'list', 'sll', 'node', 'traversal']
       },
       {
-        id: 's5', n: 5, title: 'Doubly & Circular Linked Lists', ar: 'القوائم المرتبطة المزدوجة والدائرية',
+        id: 's5', n: 5, title: 'Doubly & Circular Linked Lists', ar: T('k65'),
         c: '#fb923c', c2: '#f472b6', glow: 'rgba(251,146,60,.18)',
         lectures: ['../Data Structrures/Lectrures/Lecture 04 - liked list p2 new.pdf'],
         ws: ['../Data Structrures/Labs/Lab 04.zip'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Lab', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k66'), ws: 'Lab', test: T('k67') },
         kw: ['doubly', 'circular', 'dll', 'tail']
       },
       {
-        id: 's6', n: 6, title: 'Stacks — LIFO, Implementations & Applications', ar: 'المكدسات: LIFO والتطبيقات',
+        id: 's6', n: 6, title: 'Stacks — LIFO, Implementations & Applications', ar: T('k68'),
         c: '#f472b6', c2: '#ec4899', glow: 'rgba(244,114,182,.18)',
         lectures: ['../Data Structrures/Lectrures/Lecture 05 - Stacks new.pdf'],
         ws: [],
         steps: ['lecture', 'test'],
-        stepLabels: { lecture: 'المحاضرة', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k69'), test: T('k70') },
         kw: ['stack', 'lifo', 'push', 'pop', 'delimiter', 'postfix']
       },
       {
-        id: 's7', n: 7, title: 'Queues & Circular Queues', ar: 'الطوابير والطوابير الدائرية',
+        id: 's7', n: 7, title: 'Queues & Circular Queues', ar: T('k71'),
         c: '#ec4899', c2: '#a855f7', glow: 'rgba(236,72,153,.18)',
         lectures: ['../Data Structrures/Lectrures/Lecture 06 - Queues new.pdf'],
         ws: [],
         steps: ['lecture', 'test'],
-        stepLabels: { lecture: 'المحاضرة', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k72'), test: T('k73') },
         kw: ['queue', 'fifo', 'circular', 'enqueue', 'dequeue']
       }
     ],
@@ -270,66 +936,66 @@ const SUBJECTS = [
     hasVideos: false,
     topics: [
       {
-        id: 'p1', n: 1, title: 'Sample Space, Events & Counting Rules', ar: 'فضاء العينة والأحداث وقواعد العد',
+        id: 'p1', n: 1, title: 'Sample Space, Events & Counting Rules', ar: T('k74'),
         c: '#fbbf24', c2: '#f59e0b', glow: 'rgba(251,191,36,.18)',
         lectures: ['../Probability/lectures/Lec 1.pdf'],
         ws: ['../Probability/Tutorial/Sheet 1.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k75'), ws: 'Sheet', test: T('k76') },
         kw: ['sample', 'space', 'event', 'counting']
       },
       {
-        id: 'p2', n: 2, title: 'Probability of an Event & Probability Laws', ar: 'احتمال الحدث وقوانين الاحتمال',
+        id: 'p2', n: 2, title: 'Probability of an Event & Probability Laws', ar: T('k77'),
         c: '#fb923c', c2: '#f472b6', glow: 'rgba(251,146,60,.18)',
         lectures: ['../Probability/lectures/lec_2.pdf'],
         ws: ['../Probability/Tutorial/Sheet 2_update.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k78'), ws: 'Sheet', test: T('k79') },
         kw: ['probability', 'laws', 'axiom', 'addition']
       },
       {
-        id: 'p3', n: 3, title: 'Conditional Probability', ar: 'الاحتمال الشرطي',
+        id: 'p3', n: 3, title: 'Conditional Probability', ar: T('k80'),
         c: '#f472b6', c2: '#ec4899', glow: 'rgba(244,114,182,.18)',
         lectures: ['../Probability/lectures/lec_2.pdf'],
         ws: ['../Probability/Tutorial/Sheet 3.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k81'), ws: 'Sheet', test: T('k82') },
         kw: ['conditional', 'given']
       },
       {
-        id: 'p4', n: 4, title: 'Independence, Total Probability & Bayes’ Theorem', ar: 'الاستقلال واحتمال الإجمالي وbayes',
+        id: 'p4', n: 4, title: 'Independence, Total Probability & Bayes’ Theorem', ar: T('k83'),
         c: '#ec4899', c2: '#a855f7', glow: 'rgba(236,72,153,.18)',
         lectures: ['../Probability/lectures/lec_3.pdf'],
         ws: ['../Probability/Tutorial/Sheet 3.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k84'), ws: 'Sheet', test: T('k85') },
         kw: ['independence', 'bayes', 'total', 'probability', 'reliability']
       },
       {
-        id: 'p5', n: 5, title: 'Random Variables — PDF, CDF, Expectation & Variance', ar: 'المتغيرات العشوائية والتوقع والتباين',
+        id: 'p5', n: 5, title: 'Random Variables — PDF, CDF, Expectation & Variance', ar: T('k86'),
         c: '#a855f7', c2: '#818cf8', glow: 'rgba(168,85,247,.18)',
         lectures: ['../Probability/lectures/lec_4.pdf'],
         ws: ['../Probability/Tutorial/Sheet 4.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k87'), ws: 'Sheet', test: T('k88') },
         kw: ['random', 'variable', 'expectation', 'variance', 'cdf']
       },
       {
-        id: 'p6', n: 6, title: 'MGF & Discrete Distributions — Bernoulli & Binomial', ar: 'دالةMoment Generating والتوزيعات المتقطعة',
+        id: 'p6', n: 6, title: 'MGF & Discrete Distributions — Bernoulli & Binomial', ar: T('k89'),
         c: '#818cf8', c2: '#22d3ee', glow: 'rgba(129,140,248,.18)',
         lectures: ['../Probability/lectures/lec_5.pdf'],
         ws: ['../Probability/Tutorial/Sheet 5.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k90'), ws: 'Sheet', test: T('k91') },
         kw: ['mgf', 'bernoulli', 'binomial', 'discrete']
       },
       {
-        id: 'p7', n: 7, title: 'Poisson Distribution & Counting-Process Applications', ar: 'توزيع poisson وتطبيقات',
+        id: 'p7', n: 7, title: 'Poisson Distribution & Counting-Process Applications', ar: T('k92'),
         c: '#22d3ee', c2: '#38bdf8', glow: 'rgba(34,211,238,.18)',
         lectures: ['../Probability/lectures/lec_5.pdf'],
         ws: ['../Probability/Tutorial/Sheet 6.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k93'), ws: 'Sheet', test: T('k94') },
         kw: ['poisson', 'counting', 'process']
       }
     ],
@@ -347,39 +1013,39 @@ const SUBJECTS = [
     hasVideos: false,
     topics: [
       {
-        id: 'e1', n: 1, title: 'Circuit Elements — Charge, Current, Voltage, Power & Energy', ar: 'عناصر الدائرة: شحنة وتيار وجهود وطاقة',
+        id: 'e1', n: 1, title: 'Circuit Elements — Charge, Current, Voltage, Power & Energy', ar: T('k95'),
         c: '#38bdf8', c2: '#818cf8', glow: 'rgba(56,189,248,.18)',
         lectures: ['../Circuits/Lectures/Lecture1 (Chapter 1).pdf'],
         ws: ['../Circuits/Tutorials/Sheet 1.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k96'), ws: 'Sheet', test: T('k97') },
         kw: ['charge', 'current', 'voltage', 'power', 'energy']
       },
       {
-        id: 'e2', n: 2, title: "Ohm's Law, Kirchhoff's Laws & Series/Parallel Reduction", ar: 'قانون أوم وقوانين كيرشوف والتبسيط',
+        id: 'e2', n: 2, title: "Ohm's Law, Kirchhoff's Laws & Series/Parallel Reduction", ar: T('k98'),
         c: '#818cf8', c2: '#a855f7', glow: 'rgba(129,140,248,.18)',
         lectures: ['../Circuits/Lectures/Lecture2 (Chapter 2).pdf'],
         ws: ['../Circuits/Tutorials/Sheet 2.pdf', '../Circuits/Tutorials/Sheet 3.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k99'), ws: 'Sheet', test: T('k100') },
         kw: ['ohm', 'kirchhoff', 'kcl', 'kvl', 'series', 'parallel', 'dependent']
       },
       {
-        id: 'e3', n: 3, title: 'Nodal & Mesh Analysis Techniques', ar: 'تحليل العقد والشبكات (Chapter 3)',
+        id: 'e3', n: 3, title: 'Nodal & Mesh Analysis Techniques', ar: T('k101'),
         c: '#a855f7', c2: '#f472b6', glow: 'rgba(168,85,247,.18)',
         lectures: ['../Circuits/Lectures/Lecture3 (Chapter 3).pdf', '../Circuits/Lectures/Lecture4 (Chapter 3).pdf'],
         ws: ['../Circuits/Tutorials/Sheet 4.pdf', '../Circuits/Tutorials/Sheet 5.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k102'), ws: 'Sheet', test: T('k103') },
         kw: ['nodal', 'mesh', 'supernode', 'supermesh', 'cramer']
       },
       {
-        id: 'e4', n: 4, title: 'Circuit Theorems — Superposition, Thévenin/Norton, Max Power', ar: 'نظريات الدوائر (Chapter 4)',
+        id: 'e4', n: 4, title: 'Circuit Theorems — Superposition, Thévenin/Norton, Max Power', ar: T('k104'),
         c: '#f472b6', c2: '#fb7185', glow: 'rgba(244,114,182,.18)',
         lectures: ['../Circuits/Lectures/Lecture5 (Chapter 4).pdf'],
         ws: ['../Circuits/Tutorials/Sheet 6.pdf'],
         steps: ['lecture', 'ws', 'test'],
-        stepLabels: { lecture: 'المحاضرة', ws: 'Sheet', test: 'اختبار ذاتي' },
+        stepLabels: { lecture: T('k105'), ws: 'Sheet', test: T('k106') },
         kw: ['superposition', 'thevenin', 'norton', 'transformation', 'maximum', 'power']
       }
     ],
@@ -391,27 +1057,31 @@ const SUBJECTS = [
 /* ============================================================
    2) الثوابت العامة
    ============================================================ */
-const STEP_META = {
-  video: { label: 'فيديو الشرح', icon: '▶', c: '#22d3ee' },
-  lecture: { label: 'المحاضرة', icon: '📄', c: '#a855f7' },
+STEP_META = {
+  video: { label: T('k107'), icon: '▶', c: '#22d3ee' },
+  lecture: { label: T('k108'), icon: '📄', c: '#a855f7' },
   ws: { label: 'Sheet / Lab', icon: '📝', c: '#fbbf24' },
-  test: { label: 'اختبار ذاتي', icon: '🧠', c: '#34d399' },
-  custom: { label: 'مهمة', icon: '•', c: '#94a3b8' }
+  test: { label: T('k109'), icon: '🧠', c: '#34d399' },
+  custom: { label: T('k110'), icon: '•', c: '#94a3b8' }
 };
-const QUOTES = [
-  'كل سطر بتكتبه بيم الساعة — أحسن من ساعتين مذاكرة وبلا فايدة.',
-  'اللي فاهمه دلوقتي أحسن من اللي حفظته امبارح.',
-  'مفيش عبقري، فيه بس حد اتعلم صبر.',
-  'خد 5 دقايق بريك، مخك بيحتاجها أكتر منك.',
-  'سؤال واحد صعب النهارده أحسن من عشرة أسئلة سهلة بكره.',
-  'الـSheet هو اللي بيخليك تجيب صح في الامتحان.',
-  'لو مفيش وقت، اعمل بومودورو واحد بس — المهم تبتدي.',
-  'امتحن نفسك في كل مادة — المذاكرة مش بتبقى مذاكرة لحد ما تختبر.',
-  'الفرق بين ٩٠٪ و١٠٠٪ هو الراحة الصح في الوقت الصح.',
-  'خلي عينك على الهدف: الدرجات هي اللي بتفرق.'
+QUOTES = [
+  T('k111'),
+  T('k112'),
+  T('k113'),
+  T('k114'),
+  T('k115'),
+  T('k116'),
+  T('k117'),
+  T('k118'),
+  T('k119'),
+  T('k120')
 ];
-const STORE_KEY = 'midtermplanner.v1';
-const DAY_NAMES = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  DAY_NAMES = [T('k121'), T('k122'), T('k123'), T('k124'), T('k125'), T('k126'), T('k127')];
+  /* في النسخة الإنجليزية: عنوان التوبك بالإنجليزي عشان يت consistent مع الكارت */
+  if (LANG === 'en') SUBJECTS.forEach(s => s.topics.forEach(t => { t.ar = t.title; }));
+}
+initData();
+
 
 /* فيديوهات البلاي ليست بتاعة Calc 2 (15 فيديو) — موزّعة على التوبيكس.
    sec = مدة الفيديو بالثواني عشان حساب الساعات يظبط. */
@@ -502,23 +1172,23 @@ const EXAM_DATE_FIX = { calc2: ['2026-11-12', '2026-11-10'], db: ['2026-11-18', 
 const EXAM_TIME_FIX = { db: ['12:00', '10:30'], ds: ['09:00', '10:30'] };
 const fmtLeft = ms => {
   if (ms == null) return '-';
-  if (ms <= 0) return '\u0627\u0645\u062A\u062D\u0646';
+  if (ms <= 0) return T('k128');
   const tm = Math.floor(ms / 60000);
   const d = Math.floor(tm / 1440), h = Math.floor((tm % 1440) / 60), m = tm % 60;
   const p = [];
-  if (d) p.push(d + '\u064A');
-  if (d || h) p.push(h + '\u0633');
-  p.push(m + '\u062F');
+  if (d) p.push(d + T('k129'));
+  if (d || h) p.push(h + T('k130'));
+  p.push(m + T('k131'));
   return p.join(' ');
 };
 const fmtLeftShort = ms => {
   if (ms == null) return '-';
-  if (ms <= 0) return '\u0627\u0645\u062A\u062D\u0646';
+  if (ms <= 0) return T('k132');
   const tm = Math.floor(ms / 60000);
   const d = Math.floor(tm / 1440), h = Math.floor((tm % 1440) / 60);
-  if (d) return d + '\u064A ' + h + '\u0633';
-  if (h) return h + '\u0633';
-  return (tm % 60) + '\u062F';
+  if (d) return d + T('k133') + h + T('k134');
+  if (h) return h + T('k135');
+  return (tm % 60) + T('k136');
 };
 const nextExam = () => {
   const now = Date.now();
@@ -553,7 +1223,8 @@ const parseHM = s => { const [h, m] = String(s || '00:00').split(':').map(Number
 const hmText = m => fmtClock(((m % 1440) + 1440) % 1440);
 const arDate = iso => {
   try {
-    return new Date(iso + 'T00:00:00').toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' });
+    const loc = (typeof LANG !== 'undefined' && LANG === 'en') ? 'en-GB' : 'ar-EG';
+    return new Date(iso + 'T00:00:00').toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
   } catch (e) { return iso; }
 };
 function toast(msg) {
@@ -638,7 +1309,7 @@ function renderSubTabs() {
     b.innerHTML =
       '<span class="st-dot"></span>' + esc(sub.name) +
       '<small>' + p.pct + '%</small>' +
-      (_passed ? '<span class="st-badge">&#10003;</span>' : (dl !== null && dl >= 0 ? '<span class="st-badge">' + (dl === 0 ? '\u0627\u0644\u064A\u0648\u0645' : dl + '\u064A') + '</span>' : '<span class="st-badge">\u2014</span>'));
+      (_passed ? '<span class="st-badge">&#10003;</span>' : (dl !== null && dl >= 0 ? '<span class="st-badge">' + (dl === 0 ? T('k137') : dl + T('k138')) + '</span>' : '<span class="st-badge">\u2014</span>'));
     b.onclick = () => { activeSubject = sub.id; renderAll(); };
     box.appendChild(b);
   });
@@ -647,7 +1318,7 @@ function renderTop() {
   const st = todayStats();
   const goal = S.settings.goalHours * 60;
   $('#statFocus').textContent = st.focusMin;
-  $('#statFocusGoal').textContent = '/ ' + goal + ' د';
+  $('#statFocusGoal').textContent = '/ ' + goal + T('k139');
   $('#statStreak').textContent = computeStreak();
   const sub = subjectById(activeSubject);
   if (sub) {
@@ -685,10 +1356,10 @@ function renderMidCountdown() {
       $('#nextExamName').textContent = nx.s.name + ' · ' + nx.s.code;
       $('#nextExamLeft').textContent = fmtLeft(nx.diff);
       $('#nextExamWhen').textContent = arDate(examOf(nx.s.id)) + ' · ' + examTimeOf(nx.s.id);
-      $('#nextExamClock').textContent = '\u0623\u0642\u0631\u0628 \u0645\u064A\u062F\u062A\u064A\u0631\u0645';
+      $('#nextExamClock').textContent = T('k140');
     }
   } else {
-    if (chip) { chip.textContent = '-'; sub.textContent = 'ميدتيرم'; }
+    if (chip) { chip.textContent = '-'; sub.textContent = T('k141'); }
     if (box) box.hidden = true;
   }
 }
@@ -705,7 +1376,7 @@ function renderExams() {
       '<span class="ex-ico">' + (s.hasVideos ? '📐' : '📚') + '</span>' +
       '<div class="ex-main"><span class="ex-name">' + esc(s.name) + '</span>' +
       '<span class="ex-date">' + esc(arDate(examOf(s.id))) + ' · ' + esc(examTimeOf(s.id)) + '</span></div>' +
-      '<div class="ex-left">' + (dt ? (dt.getTime() <= Date.now() ? 'امتحن' : fmtLeft(dt.getTime() - Date.now())) : (d === null ? '-' : d + ' يوم')) +
+      '<div class="ex-left">' + (dt ? (dt.getTime() <= Date.now() ? T('k142') : fmtLeft(dt.getTime() - Date.now())) : (d === null ? '-' : d + T('k143'))) +
       '<small>' + esc(s.code) + '</small></div>';
     el.onclick = () => { activeSubject = s.id; renderAll(); };
     el.style.cursor = 'pointer';
@@ -716,12 +1387,32 @@ function renderExams() {
 /* ============================================================
    7) TIMELINE
    ============================================================ */
+function planNote(item, tp) {
+  if (item.autoNote !== false) {
+    if (item.isBreak) return T('k159');
+    if (tp && item.step && item.step !== 'custom') {
+      return (item.optional ? T('k165') : '') + T('k166') +
+        STEP_META[item.step].label + ' (' + tp.ar + ')';
+    }
+  }
+  return item.note || (tp ? tp.ar : T('k146'));
+}
+function planTitle(item, tp) {
+  if (tp) {
+    return ltr(tp.n + '. ' + tp.title) + (item.step !== 'custom' ? ' — ' + esc(STEP_META[item.step].label) : '');
+  }
+  if (item.isBreak) {
+    const kind = item.bKind || (item.min >= S.settings.long ? 'long' : 'short');
+    return kind === 'long' ? T('k157') : T('k158');
+  }
+  return esc(item.title);
+}
 function renderTimeline() {
   const box = $('#timeline');
   const plan = dayPlan().plan.slice().sort((a, b) => a.start - b.start);
   box.innerHTML = '';
   $('#timelineEmpty').hidden = plan.length > 0;
-  $('#planBadge').textContent = plan.length + ' مهمة · ' + Math.round(plan.reduce((a, b) => a + (b.min || 0), 0)) + ' د';
+  $('#planBadge').textContent = plan.length + T('k144') + Math.round(plan.reduce((a, b) => a + (b.min || 0), 0)) + T('k145');
 
   plan.forEach(item => {
     const meta = STEP_META[item.step] || STEP_META.custom;
@@ -730,9 +1421,7 @@ function renderTimeline() {
     const el = document.createElement('div');
     el.className = 'slot' + (item.done ? ' done' : '');
     el.style.setProperty('--c', tp ? tp.c : meta.c);
-    const titleHtml = tp
-      ? ltr(tp.n + '. ' + tp.title) + (item.step !== 'custom' ? ' — ' + esc(STEP_META[item.step].label) : '')
-      : esc(item.title);
+    const titleHtml = planTitle(item, tp);
     let fileLink = '';
     if (tp && item.step === 'lecture' && tp.lectures[0]) fileLink = '<a class="slot-file" href="' + enc(tp.lectures[0]) + '" target="_blank">📄</a>';
     if (tp && item.step === 'ws' && tp.ws[0]) fileLink = '<a class="slot-file" href="' + enc(tp.ws[0]) + '" target="_blank">📝</a>';
@@ -743,13 +1432,13 @@ function renderTimeline() {
           '<span class="tag">' + meta.icon + ' ' + meta.label + '</span>' +
           (sub ? '<span class="sub-tag" style="--c:' + sub.c + '">' + esc(sub.name) + '</span>' : '') +
         '</div>' +
-        '<div class="slot-sub">' + (item.note ? esc(item.note) : (tp ? esc(tp.ar) : 'مهمة عامة')) + '</div>' +
+        '<div class="slot-sub">' + esc(planNote(item, tp)) + '</div>' +
       '</div>' +
       '<div class="slot-actions">' +
         fileLink +
-        '<button class="chk' + (item.done ? ' on' : '') + '" data-act="toggle" title="خلصت">✓</button>' +
-        '<button class="mini-btn" data-act="edit" title="تعديل">✎</button>' +
-        '<button class="mini-btn" data-act="del" title="مسح">🗑</button>' +
+        '<button class="chk' + (item.done ? ' on' : '') + T('k147') +
+        T('k148') +
+        T('k149') +
       '</div>';
     el.querySelector('[data-act=toggle]').onclick = () => toggleTask(item.id);
     el.querySelector('[data-act=edit]').onclick = () => openTaskModal(item);
@@ -800,11 +1489,30 @@ function openGenModal() {
     esc(sub.name) + ' (' + esc(sub.code) + ')</div><div class="step-pick">' +
     sub.topics.map(t => '<label><input type="checkbox" name="gt" value="' + t.id + '" checked> ' + t.n + '. ' + esc(t.title) + '</label>').join('') +
     '</div></div>').join('');
-  const orderOpts = '<option value="seq">التسلسل العادي</option>' +
-    '<option value="weak">الأضعف الأول (اللي فاضل)</option>' +
-    '<option value="review">المراجعة أولاً</option>' +
-    '<option value="urgent">الأقرب ميدتيرم الأول</option>';
-  openModal('⚡ توليد خطة اليوم', `
+  const orderOpts = T('k150') +
+    T('k151') +
+    T('k152') +
+    T('k153');
+  openModal(T('k154'), (LANG === 'en' ? `
+    <div class="field"><label>Start at</label>
+      <input type="time" id="genStart" value="${S.settings.dayStart}"></div>
+    <div class="field"><label>Focus session length</label>
+      <select id="genLen">
+        <option value="25"${S.settings.focus === 25 ? ' selected' : ''}>25 min</option>
+        <option value="30"${S.settings.focus === 30 ? ' selected' : ''}>30 min</option>
+        <option value="45"${S.settings.focus === 45 ? ' selected' : ''}>45 min</option>
+        <option value="60"${S.settings.focus === 60 ? ' selected' : ''}>60 min</option>
+      </select></div>
+    <div class="field"><label>Total hours needed</label>
+      <input type="number" id="genHours" min="1" max="14" step="1" value="${S.settings.goalHours}"></div>
+    <div class="field"><label>Topic order</label><select id="genOrder">${orderOpts}</select></div>
+    <div class="field"><label>Topics to include</label>${opts}</div>
+    <div class="hint">The plan follows this order for every topic: <b>Lecture video ← Lecture ← Sheet/Lab ← Self test</b>,
+      and every Pomodoro session is followed by a break.</div>
+    <div class="form-actions">
+      <button class="primary-btn" id="genRun">Generate the plan</button>
+      <button class="soft-btn" data-close="1">Cancel</button>
+    </div>` : `
     <div class="field"><label>ابدأ من الساعة</label>
       <input type="time" id="genStart" value="${S.settings.dayStart}"></div>
     <div class="field"><label>طول جلسة التركيز</label>
@@ -823,7 +1531,7 @@ function openGenModal() {
     <div class="form-actions">
       <button class="primary-btn" id="genRun">ولّد الخطة</button>
       <button class="soft-btn" data-close="1">إلغاء</button>
-    </div>`);
+    </div>`));
   $('#genRun').onclick = () => {
     const picked = Array.from(document.querySelectorAll('input[name=gt]:checked')).map(i => i.value);
     const hours = parseFloat($('#genHours').value) || 4;
@@ -857,7 +1565,8 @@ function buildPlan(topicIds, order, hours, len, startAt) {
       plan.push({
         id: uid(), start: t, end: t + len, min: len, topicId: tid, step,
         title: tp.n + '. ' + tp.title + ' — ' + STEP_META[step].label,
-        note: 'الهدف: ' + STEP_META[step].label + ' (' + tp.ar + ')',
+        note: T('k156') + STEP_META[step].label + ' (' + tp.ar + ')',
+        autoNote: true,
         done: false
       });
       t += len; made++;
@@ -865,8 +1574,8 @@ function buildPlan(topicIds, order, hours, len, startAt) {
       plan.push({
         id: uid(), start: t, end: t + (isLong ? S.settings.long : S.settings.short),
         min: isLong ? S.settings.long : S.settings.short,
-        topicId: null, step: 'custom', title: isLong ? '☕ بريك طويل' : '☕ بريك قصير',
-        note: 'اشرب مية، قوم اتمشّى، بُص بعيد عن الشاشة.', done: false, isBreak: true
+        topicId: null, step: 'custom', title: isLong ? T('k157') : T('k158'),
+        note: T('k159'), autoNote: true, done: false, isBreak: true, bKind: isLong ? 'long' : 'short'
       });
       t += isLong ? S.settings.long : S.settings.short;
     }
@@ -878,7 +1587,7 @@ function buildPlan(topicIds, order, hours, len, startAt) {
   const first = plan.find(p => !p.isBreak);
   if (first) currentTaskId = first.id;
   save(); renderAll();
-  toast('تم توليد خطة: ' + plan.filter(p => !p.isBreak).length + ' جلسة');
+  toast(T('k160') + plan.filter(p => !p.isBreak).length + T('k161'));
 }
 
 /* ============================================================
@@ -1058,8 +1767,8 @@ function sprintDayPlan(topicIds, startAt, isLast, optionalIds, sub) {
     const brk = isLong ? S.settings.long : S.settings.short;
     plan.push({
       id: uid(), start: t, end: t + brk, min: brk, topicId: null, step: 'custom',
-      title: isLong ? '☕ بريك طويل' : '☕ بريك',
-      note: 'قوم اتمشّى، اشرب مية، بُص بعيد عن الشاشة.', done: false, isBreak: true
+      title: isLong ? T('k162') : T('k163'),
+      note: T('k164'), autoNote: true, done: false, isBreak: true, bKind: isLong ? 'long' : 'short'
     });
     t += brk;
   };
@@ -1081,8 +1790,9 @@ function sprintDayPlan(topicIds, startAt, isLast, optionalIds, sub) {
             id: uid(), start: t, end: t + len, min: len, topicId: id, step: st.step,
             title: (isOptional ? '⏳ ' : '') + tp.n + '. ' + tp.title + ' — ' + STEP_META[st.step].label +
               (nBlocks > 1 ? ' (' + i + '/' + nBlocks + ')' : ''),
-            note: (isOptional ? 'أولوية أخيرة — لو الوقت سمح. ' : '') +
-              'الهدف: ' + STEP_META[st.step].label + ' (' + tp.ar + ')', done: false
+            note: (isOptional ? T('k165') : '') +
+              T('k166') + STEP_META[st.step].label + ' (' + tp.ar + ')',
+            autoNote: true, optional: isOptional, done: false
           });
           t += len; left -= len; blocks++;
           if (left > 0) addBreak();
@@ -1101,20 +1811,20 @@ function sprintDayPlan(topicIds, startAt, isLast, optionalIds, sub) {
     const at = plan[li].start;
     plan.splice(li, 0, {
       id: uid(), start: at, end: at + 60, min: 60, topicId: null, step: 'custom',
-      title: '🍽️ غدا — كلّي وامشي شوية', note: 'بعدها رجوع بالتركيز.', done: false, isBreak: true
+      title: T('k167'), note: T('k168'), done: false, isBreak: true
     });
     for (let i = li + 1; i < plan.length; i++) { plan[i].start += 60; plan[i].end += 60; }
   }
   if (isLast) {
     plan.push({
       id: uid(), start: t, end: t + 90, min: 90, topicId: null, step: 'custom',
-      title: '🎯 مراجعة نهائية: ملخص + 30 سؤال من كل الـSheets',
-      note: 'ركّز على الأخطاء اللي وقعت فيها، مش على الجديد.', done: false
+      title: T('k169'),
+      note: T('k170'), done: false
     });
     t += 90;
     plan.push({
       id: uid(), start: t, end: t + 30, min: 30, topicId: null, step: 'custom',
-      title: '🌙 مراجعة خفيفة قبل النوم', note: 'راجع ورقة الملخص بس ونام بدري.', done: false
+      title: T('k171'), note: T('k172'), done: false
     });
   }
   return plan;
@@ -1123,7 +1833,7 @@ function openSprintModal() {
   let capH = Math.max(3, Math.min(12, S.settings.goalHours));
   let sp = sprintPlan(capH * 60);
   if (!sp.days.length) {
-    openModal('🔥 خطة الميدتيرم', '<div class="hint">مفيش أيام متبقية (أو التواريخ عدّت). حدّث مواعيد الميدتيرم من الإعدادات.</div>');
+    openModal(T('k173'), T('k174'));
     return;
   }
   const startAtDefault = parseHM(S.settings.dayStart);
@@ -1131,13 +1841,18 @@ function openSprintModal() {
   const perSubRows = () => sp.subs.map(sub => {
     const ps = sp.perSubject[sub.id];
     const done = subProgress(sub).pct;
-    const leftTxt = ps.past ? 'امتحن ✅' : (ps.dt ? 'باقي ' + fmtLeft(ps.dt.getTime() - Date.now()) : (ps.left === null ? '-' : 'باقي ' + ps.left + ' يوم'));
-    return `<div class="sprint-subject" style="--c:${sub.c}">
+    const leftTxt = ps.past ? T('k175') : (ps.dt ? T('k176') + fmtLeft(ps.dt.getTime() - Date.now()) : (ps.left === null ? '-' : T('k177') + ps.left + T('k178')));
+    return (LANG === 'en' ? `<div class="sprint-subject" style="--c:${sub.c}">
+      <div class="ss-head"><b>${esc(sub.name)}</b><span class="badge ghost">${esc(sub.code)}</span>
+        <span class="ss-meta">${esc(arDate(ps.exam))} · ${esc(examTimeOf(sub.id))} · ${esc(leftTxt)}</span>
+        <span class="badge ghost" style="margin-inline-start:auto">${done}% done</span></div>
+      <div class="hint" style="margin-top:2px">⏳ Left ≈ <b>${(ps.coreMin / 60).toFixed(1)} h</b> core${ps.optMin ? ' + ' + (ps.optMin / 60).toFixed(1) + ' h bonus' : ''}</div>
+    </div>` : `<div class="sprint-subject" style="--c:${sub.c}">
       <div class="ss-head"><b>${esc(sub.name)}</b><span class="badge ghost">${esc(sub.code)}</span>
         <span class="ss-meta">${esc(arDate(ps.exam))} · ${esc(examTimeOf(sub.id))} · ${esc(leftTxt)}</span>
         <span class="badge ghost" style="margin-inline-start:auto">${done}% خلص</span></div>
       <div class="hint" style="margin-top:2px">⏳ متبقي ≈ <b>${(ps.coreMin / 60).toFixed(1)} س</b> أساسية${ps.optMin ? ' + ' + (ps.optMin / 60).toFixed(1) + ' س بونص' : ''}</div>
-    </div>`;
+    </div>`);
   }).join('');
 
   const buildRows = () => {
@@ -1165,7 +1880,38 @@ function openSprintModal() {
   let rows = buildRows();
 
   const render = () => {
-    openModal('🔥 خطة الميدتيرم — كل المواد', `
+    openModal(T('k180'), (LANG === 'en' ? `
+      <div class="hint">The plan spreads your hours over <b>${rows.filter(r => !r.empty).length}</b> days, and the nearest exam comes first.
+        Every subject has core topics (must be covered) and optional ones (bonus if time allows).</div>
+      <div class="sprint-subject" style="--c:#22d3ee">
+        <div class="ss-head"><b>Subject summary</b></div>
+        ${perSubRows()}
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Max study hours per day</label>
+          <input type="number" id="spCap" min="3" max="12" step="0.5" value="${capH}"></div>
+        <div class="field"><label>Start the day at</label><input type="time" id="spStart" value="${S.settings.dayStart}"></div>
+      </div>
+      <div class="step-pick">
+        <label><input type="checkbox" id="spLight"${SPRINT_LIGHT ? ' checked' : ''}> 🧪 Crush mode: less self-testing, focus on lecture + Sheet</label>
+        <label><input type="checkbox" id="spWeekend"${SPRINT_SKIP_WEEKEND ? ' checked' : ''}> 🚫 Skip Friday and Saturday (rest days)</label>
+      </div>
+      ${rows.some(r => r.late) ? `<div class="hint warn">⚠️ One day will finish late (${rows.filter(r => r.late).map(r => r.to).join(' and ')}) — your study time will take more than the available hours, <b>the breaks</b> included. If you cannot handle it: start earlier or turn on Crush mode.</div>` : ''}
+      ${(sp.passed && sp.passed.length) ? `<div class="hint">✅ <b>Exam done</b> — these exams already passed, so their topics are not in the plan: ${sp.passed.map(id => esc(subjectOfTopic(id).name + ' · ' + topicById(id).title)).join(' — ')}</div>` : ''}      <div class="sprint-days">
+        ${rows.filter(r => !r.empty).map((r, i) => `
+          <div class="sprint-day">
+            <div class="sd-head"><b>${i + 1}. ${r.day} ${arDate(r.date)}</b><span class="badge">${r.hours} h</span></div>
+            <div class="sd-time">🕘 ${r.from} → ${r.to} · ${r.blocks} sessions</div>
+            ${r.groups.map(g => `<div class="sprint-subject" style="--c:${g.sub.c};margin-top:7px">
+              <div class="ss-head"><b>${esc(g.sub.name)}</b></div>
+              <ul>${g.list.map(id => '<li>' + ltr(topicById(id).n + '. ' + topicById(id).title) + '</li>').join('')}</ul>
+            </div>`).join('')}
+          </div>`).join('')}
+      </div>
+      <div class="form-actions">
+        <button class="primary-btn" id="spRun">Generate daily plans</button>
+        <button class="soft-btn" data-close="1">Cancel</button>
+      </div>` : `
       <div class="hint">الخطة بتوزّع الساعات على <b>${rows.filter(r => !r.empty).length}</b> يوم، والأقرب امتحاناً ليه الأولوية.
         كل مادة ليها توبيكس أساسية (لازم تتغطي) واختيارية (بونص لو الوقت سمح).</div>
       <div class="sprint-subject" style="--c:#22d3ee">
@@ -1185,7 +1931,7 @@ function openSprintModal() {
       ${(sp.passed && sp.passed.length) ? `<div class="hint">✅ <b>امتحن وخلص</b> — الامتحان عدّى فالتوبيكس دي ما اتغطّتش في الخطة: ${sp.passed.map(id => esc(subjectOfTopic(id).name + ' · ' + topicById(id).title)).join(' — ')}</div>` : ''}      <div class="sprint-days">
         ${rows.filter(r => !r.empty).map((r, i) => `
           <div class="sprint-day">
-            <div class="sd-head"><b>${i + 1}. ${r.day} ${r.date}</b><span class="badge">${r.hours} س</span></div>
+            <div class="sd-head"><b>${i + 1}. ${r.day} ${arDate(r.date)}</b><span class="badge">${r.hours} س</span></div>
             <div class="sd-time">🕘 ${r.from} → ${r.to} · ${r.blocks} جلسة</div>
             ${r.groups.map(g => `<div class="sprint-subject" style="--c:${g.sub.c};margin-top:7px">
               <div class="ss-head"><b>${esc(g.sub.name)}</b></div>
@@ -1196,7 +1942,7 @@ function openSprintModal() {
       <div class="form-actions">
         <button class="primary-btn" id="spRun">ولّد خطط الأيام</button>
         <button class="soft-btn" data-close="1">إلغاء</button>
-      </div>`);
+      </div>`));
     $('#spStart').oninput = () => {
       const st = parseHM($('#spStart').value) || startAtDefault;
       S.settings.dayStart = $('#spStart').value;
@@ -1237,7 +1983,7 @@ function openSprintModal() {
       save(); closeModal();
       setDay(sp.days[0]);
       renderAll();
-      toast('تم توليد خطة ' + sp.days.length + ' يوم لكل المواد 🔥');
+      toast(T('k182') + sp.days.length + T('k183'));
     };
   };
   render();
@@ -1248,14 +1994,28 @@ function openSprintModal() {
    ============================================================ */
 function openTaskModal(item) {
   const isNew = !item;
-  const tpOpts = '<option value="">— بدون توبيك —</option>' + allTopics().map(t => {
+  const tpOpts = T('k184') + allTopics().map(t => {
     const sub = subjectOfTopic(t.id);
     return '<option value="' + t.id + '"' + (item && item.topicId === t.id ? ' selected' : '') + '>' +
       esc(sub.name) + ' · ' + t.n + '. ' + esc(t.title) + '</option>';
   }).join('');
   const stepOpts = Object.keys(STEP_META).map(k =>
     '<option value="' + k + '"' + (item && item.step === k ? ' selected' : '') + '>' + STEP_META[k].icon + ' ' + STEP_META[k].label + '</option>').join('');
-  openModal(isNew ? '＋ مهمة جديدة' : '✎ تعديل المهمة', `
+  openModal(isNew ? T('k185') : T('k186'), (LANG === 'en' ? `
+    <div class="field"><label>Title</label><input id="tTitle" value="${item ? item.title : ''}" placeholder="e.g. Lecture 3 + Sheet 3"></div>
+    <div class="field-row">
+      <div class="field"><label>From</label><input type="time" id="tStart" value="${item ? hmText(item.start) : '09:00'}"></div>
+      <div class="field"><label>To</label><input type="time" id="tEnd" value="${item ? hmText(item.end) : '09:30'}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Topic</label><select id="tTopic">${tpOpts}</select></div>
+      <div class="field"><label>Type</label><select id="tStep">${stepOpts}</select></div>
+    </div>
+    <div class="field"><label>Note</label><textarea id="tNote" rows="2" placeholder="optional">${item ? esc(item.note || '') : ''}</textarea></div>
+    <div class="form-actions">
+      <button class="primary-btn" id="tSave">Save</button>
+      <button class="soft-btn" data-close="1">Cancel</button>
+    </div>` : `
     <div class="field"><label>العنوان</label><input id="tTitle" value="${item ? item.title : ''}" placeholder="مثال: محاضرة 3 + Sheet 3"></div>
     <div class="field-row">
       <div class="field"><label>من</label><input type="time" id="tStart" value="${item ? hmText(item.start) : '09:00'}"></div>
@@ -1269,19 +2029,20 @@ function openTaskModal(item) {
     <div class="form-actions">
       <button class="primary-btn" id="tSave">حفظ</button>
       <button class="soft-btn" data-close="1">إلغاء</button>
-    </div>`);
+    </div>`));
   $('#tSave').onclick = () => {
-    const title = $('#tTitle').value.trim() || 'مهمة';
+    const title = $('#tTitle').value.trim() || T('k188');
     const s = parseHM($('#tStart').value), e = parseHM($('#tEnd').value);
     const obj = {
       id: item ? item.id : uid(), title, start: s, end: e > s ? e : s + 30,
       min: (e > s ? e : s + 30) - s, topicId: $('#tTopic').value || null,
-      step: $('#tStep').value, note: $('#tNote').value.trim(), done: item ? item.done : false
+      step: $('#tStep').value, note: $('#tNote').value.trim(), autoNote: false,
+      done: item ? item.done : false
     };
     const p = dayPlan().plan;
     if (item) Object.assign(p.find(x => x.id === item.id), obj);
     else p.push(obj);
-    save(); renderAll(); closeModal(); toast('تم الحفظ');
+    save(); renderAll(); closeModal(); toast(T('k189'));
   };
 }
 
@@ -1299,14 +2060,14 @@ function renderFilterChips() {
     b.onclick = () => { activeSubject = val; renderAll(); };
     box.appendChild(b);
   };
-  mk('📚 كل المواد', 'all', '#a855f7');
+  mk(T('k190'), 'all', '#a855f7');
   SUBJECTS.forEach(s => mk(s.name, s.id, s.c));
 }
 function renderTopics() {
   const grid = $('#topicsGrid');
   grid.innerHTML = '';
   const sub = subjectById(activeSubject);
-  $('#topicsTitle').innerHTML = '📚 التوبيكس — ' + esc(sub.name);
+  $('#topicsTitle').innerHTML = T('k191') + esc(sub.name);
   const list = activeSubject === 'all' ? SUBJECTS : [sub];
   list.forEach(s => {
     if (activeSubject === 'all') {
@@ -1320,7 +2081,7 @@ function renderTopics() {
       const st = S.topics[t.id];
       const done = t.steps.filter(x => st.steps[x]).length;
       const pct = Math.round((done / t.steps.length) * 100);
-      const statusMap = { new: ['st-new', 'لسه مبدأتش'], progress: ['st-progress', 'شغّال'], done: ['st-done', 'خلص ✅'], review: ['st-review', 'محتاج مراجعة'] };
+      const statusMap = { new: ['st-new', T('k192')], progress: ['st-progress', T('k193')], done: ['st-done', T('k194')], review: ['st-review', T('k195')] };
       const [sc, sl] = statusMap[st.status] || statusMap.new;
       const el = document.createElement('div');
       el.className = 'topic';
@@ -1337,9 +2098,9 @@ function renderTopics() {
         '<div class="topic-foot">' +
         t.lectures.map(l => '<a href="' + enc(l) + '" target="_blank">📄 ' + esc(l.split('/').pop()) + '</a>').join('') +
         t.ws.map(w => '<a class="ws" href="' + enc(w) + '" target="_blank">📝 ' + esc(w.split('/').pop()) + '</a>').join('') +
-        (!t.lectures.length && !t.ws.length ? '<span class="vid-count">🎬 الفيديو هو المصدر (مفيش PDF محلي)</span>' : '') +
+        (!t.lectures.length && !t.ws.length ? T('k196') : '') +
         '</div>' +
-        (s.hasVideos ? '<div class="vid-count">▶ ' + (st.videos.length ? st.videos.length + ' فيديو' : 'لا يوجد فيديو') + '</div>' : '') +
+        (s.hasVideos ? '<div class="vid-count">▶ ' + (st.videos.length ? st.videos.length + T('k197') : T('k198')) + '</div>' : '') +
         '<div class="tprog"><i style="width:' + pct + '%"></i></div>';
       el.onclick = () => openTopicModal(t.id);
       grid.appendChild(el);
@@ -1351,7 +2112,7 @@ function renderReview() {
   const list = allTopics().filter(t => S.topics[t.id].status === 'review');
   box.innerHTML = '';
   if (!list.length) {
-    box.innerHTML = '<div class="hint">مفيش توبيكس في قائمة المراجعة. لو محتاج حاجة تُعاد، افتح التوبك واختار حالة "محتاج مراجعة".</div>';
+    box.innerHTML = T('k199');
     return;
   }
   list.forEach(t => {
@@ -1379,7 +2140,33 @@ function openTopicModal(id) {
     STEP_META[x].icon + ' ' + t.stepLabels[x] + '</label>').join('');
   const lecLinks = t.lectures.map(l => '<a class="soft-btn" href="' + enc(l) + '" target="_blank">📄 ' + esc(l.split('/').pop()) + '</a>').join('');
   const wsLinks = t.ws.map(w => '<a class="soft-btn" href="' + enc(w) + '" target="_blank">📝 ' + esc(w.split('/').pop()) + '</a>').join('');
-  openModal(t.n + '. ' + t.title, `
+  openModal(t.n + '. ' + t.title, (LANG === 'en' ? `
+    <div class="hint" style="font-size:13px"><span style="color:${sub.c};font-weight:800">${esc(sub.name)}</span> · ${esc(sub.code)} — ${esc(t.title)}</div>
+    <div class="field"><label>Status</label>
+      <select id="tmStatus">
+        <option value="new"${st.status === 'new' ? ' selected' : ''}>Not started</option>
+        <option value="progress"${st.status === 'progress' ? ' selected' : ''}>In progress</option>
+        <option value="review"${st.status === 'review' ? ' selected' : ''}>Needs review 🔁</option>
+        <option value="done"${st.status === 'done' ? ' selected' : ''}>Done ✅</option>
+      </select></div>
+    <div class="field"><label>Topic steps</label><div class="step-pick" id="tmSteps">${stepBoxes}</div></div>
+
+    ${sub.hasVideos ? `<div class="field"><label>Lecture videos</label>
+      <div id="tmVids">${vidRows || '<div class="hint">No videos yet.</div>'}</div>
+      <div class="vid-row"><input id="tmVidUrl" placeholder="Paste a YouTube link... (or the video ID)"><button class="soft-btn" id="tmAddVid">+ Add</button></div>
+      <div class="hint">You can also load all the videos from the playlist: press the play button above.</div>
+    </div>` : ''}
+
+    <div class="field"><label>Your notes on this topic</label><textarea id="tmNotes" rows="3" placeholder="Rules, the mistakes you keep making...">${esc(st.notes || '')}</textarea></div>
+
+    ${(t.lectures.length || t.ws.length) ? `<div class="field"><label>Course files</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${lecLinks}${wsLinks}</div></div>` : ''}
+
+    <div class="form-actions">
+      <button class="primary-btn" id="tmFocus">🎯 Start a session on this topic</button>
+      <button class="soft-btn" id="tmSave">Save</button>
+      <button class="soft-btn" data-close="1">Close</button>
+    </div>` : `
     <div class="hint" style="font-size:13px"><span style="color:${sub.c};font-weight:800">${esc(sub.name)}</span> · ${esc(sub.code)} — ${esc(t.ar)}</div>
     <div class="field"><label>الحالة</label>
       <select id="tmStatus">
@@ -1405,15 +2192,15 @@ function openTopicModal(id) {
       <button class="primary-btn" id="tmFocus">🎯 ابدأ جلسة على التوبك</button>
       <button class="soft-btn" id="tmSave">حفظ</button>
       <button class="soft-btn" data-close="1">إغلاق</button>
-    </div>`);
+    </div>`));
   $('#tmStatus').onchange = e => { S.topics[id].status = e.target.value; save(); renderTopics(); renderReview(); renderTop(); };
   if (sub.hasVideos) {
     $('#tmAddVid').onclick = () => {
       const raw = $('#tmVidUrl').value.trim();
       const vId = parseVideoId(raw);
-      if (!vId) { toast('لينك يوتيوب غير صحيح'); return; }
+      if (!vId) { toast(T('k201')); return; }
       S.topics[id].videos.push({ id: vId, title: 'Video ' + vId });
-      save(); openTopicModal(id); toast('تمت إضافة الفيديو');
+      save(); openTopicModal(id); toast(T('k202'));
     };
     $$('#tmVids [data-rm]').forEach(b => b.onclick = () => {
       S.topics[id].videos.splice(parseInt(b.dataset.rm, 10), 1); save(); openTopicModal(id);
@@ -1426,7 +2213,7 @@ function openTopicModal(id) {
     S.topics[id].notes = $('#tmNotes').value;
     $$('#tmSteps input[data-step]').forEach(i => { S.topics[id].steps[i.dataset.step] = i.checked; });
     syncTopicStatus(id);
-    save(); renderAll(); closeModal(); toast('تم الحفظ');
+    save(); renderAll(); closeModal(); toast(T('k203'));
   };
   $('#tmFocus').onclick = () => { closeModal(); openFocus(id); };
 }
@@ -1439,14 +2226,21 @@ function parseVideoId(raw) {
 function openVideoModal(topicId, idx) {
   const v = S.topics[topicId].videos[idx];
   if (!v) return;
-  openModal('▶ ' + esc(v.title || v.id), `
+  openModal('▶ ' + esc(v.title || v.id), (LANG === 'en' ? `
+    <div class="video-box" style="height:340px;border-radius:16px;overflow:hidden;border:1px solid var(--stroke)">
+      <iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0" allowfullscreen allow="encrypted-media; picture-in-picture"></iframe>
+    </div>
+    <div class="form-actions">
+      <a class="soft-btn" href="https://www.youtube.com/watch?v=${v.id}" target="_blank">Open on YouTube</a>
+      <button class="primary-btn" id="vmFocus">🎯 Play it in Focus Mode</button>
+    </div>` : `
     <div class="video-box" style="height:340px;border-radius:16px;overflow:hidden;border:1px solid var(--stroke)">
       <iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0" allowfullscreen allow="encrypted-media; picture-in-picture"></iframe>
     </div>
     <div class="form-actions">
       <a class="soft-btn" href="https://www.youtube.com/watch?v=${v.id}" target="_blank">فتح على يوتيوب</a>
       <button class="primary-btn" id="vmFocus">🎯 شغّله في Focus Mode</button>
-    </div>`);
+    </div>`));
   $('#vmFocus').onclick = () => { closeModal(); openFocus(topicId, idx); };
 }
 
@@ -1463,7 +2257,15 @@ function playlistIdFrom(url) {
 function openPlaylistModal() {
   const sub = subjectById('calc2');
   const pid = playlistIdFrom(sub.playlistUrl) || '';
-  openModal('▶ بلاي ليست يوتيوب — Calculus 2', `
+  openModal(T('k205'), (LANG === 'en' ? `
+    <div class="field"><label>Playlist link</label>
+      <input id="plUrl" value="${esc(sub.playlistUrl || '')}" placeholder="https://www.youtube.com/playlist?list=..."></div>
+    <div class="hint">Easiest way: open the playlist on YouTube → Copy → Copy playlist ID (it starts with PL...) and paste it here.</div>
+    <div id="plPlayer" style="margin-top:10px"></div>
+    <div class="form-actions">
+      <button class="primary-btn" id="plSave">Save and load the videos</button>
+      <button class="soft-btn" data-close="1">Close</button>
+    </div>` : `
     <div class="field"><label>رابط البلاي ليست</label>
       <input id="plUrl" value="${esc(sub.playlistUrl || '')}" placeholder="https://www.youtube.com/playlist?list=..."></div>
     <div class="hint">الطريقة السهلة: افتح البلاي ليست في يوتيوب → Copy → Copy playlist ID (أول حروف PL...) والصقه هنا.</div>
@@ -1471,7 +2273,7 @@ function openPlaylistModal() {
     <div class="form-actions">
       <button class="primary-btn" id="plSave">احفظ وارسم الفيديوهات</button>
       <button class="soft-btn" data-close="1">إغلاق</button>
-    </div>`);
+    </div>`));
   if (pid) $('#plPlayer').innerHTML =
     '<div class="video-box" style="height:300px;border-radius:16px;overflow:hidden;border:1px solid var(--stroke)">' +
     '<iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=' + pid + '" allowfullscreen></iframe></div>';
@@ -1482,7 +2284,7 @@ function openPlaylistModal() {
     if (p) $('#plPlayer').innerHTML =
       '<div class="video-box" style="height:300px;border-radius:16px;overflow:hidden;border:1px solid var(--stroke)">' +
       '<iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=' + p + '" allowfullscreen></iframe></div>';
-    toast('تم حفظ البلاي ليست');
+    toast(T('k207'));
   };
 }
 
@@ -1497,7 +2299,33 @@ function openSettingsModal() {
         <input type="date" data-exam="${sub.id}" value="${examOf(sub.id) || ''}">
         <input type="time" data-examtime="${sub.id}" value="${examTimeOf(sub.id)}">
       </div></div>`).join('');
-  openModal('⚙ الإعدادات', `
+  openModal(T('k208'), (LANG === 'en' ? `
+    <div class="field-row">
+      <div class="field"><label>Focus session (minutes)</label><input type="number" id="stFocus" min="5" max="120" value="${s.focus}"></div>
+      <div class="field"><label>Short break (minutes)</label><input type="number" id="stShort" min="1" max="30" value="${s.short}"></div>
+      <div class="field"><label>Long break (minutes)</label><input type="number" id="stLong" min="5" max="60" value="${s.long}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Daily target hours</label><input type="number" id="stGoal" min="1" max="14" step="0.5" value="${s.goalHours}"></div>
+      <div class="field"><label>Sessions before the long break</label><input type="number" id="stCycles" min="1" max="12" value="${s.cycles}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Study day start</label><input type="time" id="stStart" value="${s.dayStart}"></div>
+      <div class="field"><label>Study day end</label><input type="time" id="stEnd" value="${s.dayEnd}"></div>
+      <div class="field"><label>Start breaks automatically</label>
+        <select id="stAuto"><option value="1"${s.autoContinue ? ' selected' : ''}>Yes</option><option value="0"${!s.autoContinue ? ' selected' : ''}>No</option></select></div>
+    </div>
+    <div class="field"><label>Midterm dates — every subject</label>
+      <div class="field-row">${examRows}</div>
+      <div class="hint">These dates come from the Nile University Fall 2026 schedule — edit them if anything changed.</div>
+    </div>
+    <div class="form-actions">
+      <button class="primary-btn" id="stSave">Save settings</button>
+      <button class="soft-btn" id="stExport">⬇ Export progress</button>
+      <button class="soft-btn" id="stImport">⬆ Import</button>
+      <button class="soft-btn danger" id="stReset">🗑 Clear all data</button>
+    </div>
+    <input type="file" id="stFile" accept="application/json" hidden>` : `
     <div class="field-row">
       <div class="field"><label>جلسة التركيز (دقيقة)</label><input type="number" id="stFocus" min="5" max="120" value="${s.focus}"></div>
       <div class="field"><label>بريك قصير (دقيقة)</label><input type="number" id="stShort" min="1" max="30" value="${s.short}"></div>
@@ -1523,7 +2351,7 @@ function openSettingsModal() {
       <button class="soft-btn" id="stImport">⬆ استيراد</button>
       <button class="soft-btn danger" id="stReset">🗑 مسح كل البيانات</button>
     </div>
-    <input type="file" id="stFile" accept="application/json" hidden>`);
+    <input type="file" id="stFile" accept="application/json" hidden>`));
   $('#stSave').onclick = () => {
     S.settings.focus = +$('#stFocus').value || 25;
     S.settings.short = +$('#stShort').value || 5;
@@ -1536,7 +2364,7 @@ function openSettingsModal() {
     $$('#modalBody input[data-exam]').forEach(i => { if (i.value) S.exams[i.dataset.exam] = i.value; });
     $$('#modalBody input[data-examtime]').forEach(i => { if (i.value) { S.examTimes = S.examTimes || {}; S.examTimes[i.dataset.examtime] = i.value; } });
     if (timer.mode === 'focus' && !timer.running) timer.remaining = S.settings.focus * 60;
-    save(); renderAll(); closeModal(); toast('تم حفظ الإعدادات');
+    save(); renderAll(); closeModal(); toast(T('k210'));
   };
   $('#stExport').onclick = () => {
     const blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
@@ -1561,13 +2389,13 @@ function openSettingsModal() {
             t.steps.forEach(x => { if (S.topics[t.id].steps[x] === undefined) S.topics[t.id].steps[x] = false; });
           });
         });
-        save(); renderAll(); closeModal(); toast('تم الاستيراد');
-      } catch (err) { toast('ملف غير صالح'); }
+        save(); renderAll(); closeModal(); toast(T('k211'));
+      } catch (err) { toast(T('k212')); }
     };
     r.readAsText(f);
   };
   $('#stReset').onclick = () => {
-    if (!confirm('متأكد؟ هيمسح كل التقدّم والخطة.')) return;
+    if (!confirm(T('k213'))) return;
     localStorage.removeItem(STORE_KEY);
     S = defaultState();
     syncExamDefaults();
@@ -1577,7 +2405,7 @@ function openSettingsModal() {
         S.topics[t.id] = { status: 'new', steps: {}, videos: (SEED_VIDEOS[t.id] || []).slice(), notes: '' };
       });
     });
-    save(); renderAll(); closeModal(); toast('تم المسح');
+    save(); renderAll(); closeModal(); toast(T('k214'));
   };
 }
 
@@ -1603,7 +2431,7 @@ function setMode(m) {
 }
 function renderTimer() {
   const m = timer.mode;
-  const label = m === 'focus' ? 'تركيز' : m === 'short' ? 'بريك قصير' : 'بريك طويل';
+  const label = m === 'focus' ? T('k215') : m === 'short' ? T('k216') : T('k217');
   const t = fmtClock(timer.remaining);
   $('#modeLabel').textContent = label;
   $('#timeLeft').textContent = t;
@@ -1613,7 +2441,7 @@ function renderTimer() {
   const off = 552.9 * (1 - timer.remaining / total);
   $('#ringFg').style.strokeDashoffset = off;
   $('#focusRingFg').style.strokeDashoffset = off;
-  $('#cycleBadge').textContent = 'جلسة ' + timer.cycle;
+  $('#cycleBadge').textContent = T('k218') + timer.cycle;
   $('#startBtn').textContent = timer.running ? '⏸' : '▶';
   $('#focusStartBtn').textContent = timer.running ? '⏸' : '▶';
   const d = $('#pomoDots');
@@ -1624,8 +2452,8 @@ function renderTimer() {
     d.appendChild(s);
   }
   const p = dayPlan().plan.find(x => x.id === currentTaskId);
-  $('#taskLabel').textContent = p ? p.title : 'مفيش مهمة شغالة';
-  document.title = timer.running ? t + ' · ' + label + ' · Midterm Planner' : 'Midterm Planner · خطة الميدتيرم';
+  $('#taskLabel').textContent = p ? p.title : T('k219');
+  document.title = timer.running ? t + ' · ' + label + ' · Midterm Planner' : T('k220');
 }
 function startTimer() {
   if (timer.running) return;
@@ -1665,11 +2493,11 @@ function onSessionEnd() {
       }
       currentTaskId = null;
     }
-    toast('✅ خلصت جلسة تركيز (' + S.settings.focus + ' د) — برااايك! ☕');
+    toast(T('k221') + S.settings.focus + T('k222'));
     setMode(timer.cycle % S.settings.cycles === 0 ? 'long' : 'short');
     if (S.settings.autoContinue) setTimeout(startTimer, 1200);
   } else {
-    toast('☕ خلص البريك — يلا نرجع نشتغل');
+    toast(T('k223'));
     setMode('focus');
     if (S.settings.autoContinue) setTimeout(startTimer, 1200);
   }
@@ -1710,14 +2538,14 @@ function closeFocus() { $('#focusOverlay').hidden = true; }
 function renderFocus() {
   const t = focusCtx.topicId ? topicById(focusCtx.topicId) : null;
   const sub = t ? subjectOfTopic(t.id) : null;
-  $('#focusTopicBadge').innerHTML = t ? ltr(t.n + '. ' + t.title) : 'جلسة عامة';
+  $('#focusTopicBadge').innerHTML = t ? ltr(t.n + '. ' + t.title) : T('k224');
   const plan = dayPlan().plan;
   const cur = plan.find(x => x.id === currentTaskId);
   if (cur && cur.topicId) {
     const ct = topicById(cur.topicId);
     $('#focusTaskTitle').innerHTML = ltr(ct.n + '. ' + ct.title) + ' — ' + esc(STEP_META[cur.step] ? STEP_META[cur.step].label : cur.title);
   } else {
-    $('#focusTaskTitle').textContent = cur ? cur.title : (t ? t.title : 'جلسة تركيز');
+    $('#focusTaskTitle').textContent = cur ? cur.title : (t ? t.title : T('k225'));
   }
   const box = $('#focusVideoBox');
   const vids = t ? S.topics[t.id].videos : [];
@@ -1727,14 +2555,14 @@ function renderFocus() {
   } else if (sub && sub.hasVideos && sub.playlistUrl) {
     const pid = playlistIdFrom(sub.playlistUrl);
     if (pid) box.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/videoseries?list=' + pid + '" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
-    else box.innerHTML = '<div class="video-placeholder"><div class="vp-ico">▶</div><p>مفيش فيديو متحدّد</p></div>';
+    else box.innerHTML = T('k226');
   } else {
     /* مادة من غير فيديو: نعرض المحاضرة كـplaceholder مفيد */
     const firstLec = t && t.lectures[0];
     box.innerHTML = '<div class="video-placeholder" style="place-content:center;text-align:center;gap:10px">' +
       '<div class="vp-ico" style="font-size:34px">📚</div>' +
-      '<p>' + (t ? esc(t.ar) : 'جلسة تركيز') + '</p>' +
-      '<small>' + (firstLec ? 'افتح المحاضرة من اللينك تحت 👇' : 'ركّز وامشي مع الخطة') + '</small>' +
+      '<p>' + (t ? esc(t.ar) : T('k227')) + '</p>' +
+      '<small>' + (firstLec ? T('k228') : T('k229')) + '</small>' +
       '</div>';
   }
   $('#focusLec').href = (t && t.lectures[0]) ? enc(t.lectures[0]) : '#';
@@ -1744,7 +2572,7 @@ function renderFocus() {
   const curVid = vids.length ? vids[Math.min(focusCtx.videoIdx, vids.length - 1)] : null;
   const plUrl = sub ? sub.playlistUrl : '';
   $('#focusYT').href = curVid ? 'https://www.youtube.com/watch?v=' + curVid.id : (plUrl || '#');
-  $('#focusYT').textContent = curVid ? '↗ افتح على يوتيوب' : '↗ افتح البلاي ليست';
+  $('#focusYT').textContent = curVid ? T('k230') : T('k231');
   $('#focusYT').style.display = (curVid || plUrl) ? '' : 'none';
   const notes = t ? S.topics[t.id].notes : '';
   $('#focusNotes').value = notes;
@@ -1792,9 +2620,9 @@ function init() {
   if (location.protocol === 'file:') {
     const bar = document.createElement('div');
     bar.className = 'file-warn';
-    bar.innerHTML = '⚠️ فتحت الملف مباشرة، فمش هتشتغل فيديوهات يوتيوب جوّه الصفحة. ' +
-      'افتح الموقع من ملف <b>افتح-الموقع.bat</b> في نفس الفولدر (أو من http://localhost) — ' +
-      'والفيديوهات هتشتغل، والروابط هتفتح عادي.';
+    bar.innerHTML = T('k232') +
+      T('k233') +
+      T('k234');
     document.body.insertBefore(bar, document.body.firstChild);
   }
 
@@ -1803,9 +2631,9 @@ function init() {
   if (location.protocol !== 'file:' && _host && _host !== 'localhost' && _host !== '127.0.0.1' && _host !== '::1') {
     const bar = document.createElement('div');
     bar.className = 'file-warn';
-    bar.innerHTML = 'ℹ️ نسخة GitHub: ملفات المحاضرات والـSheets والـLabs (PDF) <b>مش مرفوعة</b> في المستودع، ' +
-      ' فالروابط هترجع 404. نزّل مجلدات الكورسات (Calc 2 / Database / Data Structrures / Probability / Circuits) ' +
-      'جنب فولدر الموقع وشغّل <b>افتح-الموقع.bat</b> عشان كل الروابط تشتغل.';
+    bar.innerHTML = T('k235') +
+      T('k236') +
+      T('k237');
     document.body.insertBefore(bar, document.body.firstChild);
   }
 
@@ -1827,7 +2655,7 @@ function init() {
   $('#sprintBtn').onclick = openSprintModal;
   $('#addTaskBtn').onclick = () => openTaskModal(null);
   $('#clearDayBtn').onclick = () => {
-    if (!confirm('مسح خطة اليوم؟')) return;
+    if (!confirm(T('k238'))) return;
     S.days[currentDay] = { plan: [] }; save(); renderAll();
   };
 
@@ -1851,6 +2679,7 @@ function init() {
   $('#focusExitBtn').onclick = closeFocus;
   $('#settingsBtn').onclick = openSettingsModal;
   $('#playlistBtn').onclick = openPlaylistModal;
+  $('#langBtn').onclick = () => setLang(LANG === 'en' ? 'ar' : 'en');
   $('#modalWrap').addEventListener('click', e => { if (e.target.dataset.close) closeModal(); });
 
   document.addEventListener('keydown', e => {
@@ -1873,10 +2702,14 @@ function init() {
     if (slot && !e.target.closest('.slot-actions')) {
       const id = Array.from(document.querySelectorAll('.slot')).indexOf(slot);
       const p = dayPlan().plan.slice().sort((a, b) => a.start - b.start)[id];
-      if (p) { currentTaskId = p.id; renderTimer(); toast('المهمة الحالية: ' + p.title); }
+      if (p) { currentTaskId = p.id; renderTimer(); toast(T('k239') + p.title); }
     }
   });
 
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = LANG === 'en' ? 'ltr' : 'rtl';
+  applyStaticLang();
+  updateLangBtn();
   renderAll();
   console.log('Midterm planner ready — ' + SUBJECTS.length + ' subjects, ' + allTopics().length + ' topics');
 }
