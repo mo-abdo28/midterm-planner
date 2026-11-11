@@ -1,5 +1,7 @@
 # 🗓 Midterm Planner — خطة الميدتيرم
 
+**🌐 Live site (open it on any phone): https://mo-abdo28.github.io/midterm-planner/**
+
 **A single, dependency-free study planner for every Fall 2026 midterm subject at Nile University**
 (Calculus II, Database Systems, Data Structures, Probability, Circuits) — **bilingual: العربية / English**.
 
@@ -161,6 +163,9 @@ RTL ⇄ LTR والتواريخ). على `localhost` بيفتح عربي، وعل
 
 **التشغيل:** `افتح-الموقع.bat` (ويندوز) — بيشغّل سيرفر محلي على بورت `8935` ويفتح الموقع.
 سيرفر محلي ضروري لأن يوتيوب رافض الـembed على `file://`.
+
+**🌐 النسخة المنشورة (تفتح من أي موبايل): https://mo-abdo28.github.io/midterm-planner/**
+— بتفتح إنجليزي افتراضيًا، وفيه زرار `ع` فوق للرجوع العربي.
 
 **ملفات المحاضرات مش مرفوعة:** PDFs بتفضل على جهازك (حقوق جامعة نايل + حجم 40+ ميجا)، والروابط
 نسبية، فلازم فولدرات الكورسات (`Calc 2`, `Database`, `Data Structrures`, `Probability`, `Circuits`)
